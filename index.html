@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ÚtilesShop</title>
+  <link rel="stylesheet" href="style/style.css">
+</head>
+<body>
+
+<header class="header">
+  <div class="contenedor-titulo-iconocarrito">
+    <!-- <div class="logo">📦 ÚtilesShop</div> -->
+     <div  class="contenedor_logo">
+         <img id="logoBtn" src="/assets/logo.webp" class="logo" alt="">
+     </div>
+    <button id="btnCarrito" class="carrito-btn">
+      🛒 <span id="carritoCount">0</span>
+    </button>
+  </div>
+
+  <div id="mensajeHorario" class="horario-cerrado hidden">
+    🚫 Estamos cerrados — Horario de atención: 9:00 a 18:00
+  </div>
+
+
+  <div class="buscador-container">
+    <span class="icono-buscador">🔍</span>
+  <input 
+      type="text" 
+      id="buscador"
+      placeholder="Buscar productos..."
+    />
+  </div>
+
+</header>
+
+<main class="contenedor">
+  <h1>Productos</h1>
+  <div id="productos" class="productos"></div>
+  <h1>Otros productos</h1>
+  <div id="otrosProductos" class="productos"></div>
+</main>
+
+<!-- MODAL CARRITO -->
+<div id="modalCarrito" class="modal hidden">
+  <div class="modal-content">
+    <button class="cerrar" id="cerrarCarrito">✕</button>
+    <h2 class="tituloCarrito">Tu carrito</h2>
+
+    <div id="carritoItems" class="carritoItems"></div>
+
+    <div class="form-envio">
+      <input id="direccion" placeholder="Dirección (obligatoria)">
+      <small id="errorDireccion" class="error hidden">
+        La dirección es obligatoria
+      </small>
+
+      <input id="referencia" placeholder="Referencia (opcional)">
+      <div class="metodo-pago">
+        <select id="metodoPago">
+          <option value="" disabled selected hidden>Seleccioná un método de pago</option>
+          <option value="Efectivo">Efectivo</option>  
+          <option value="Transferencia">Transferencia</option>
+        </select>
+
+        <small id="errorPago" class="error hidden">
+          Elegí un método de pago
+        </small>
+      </div>
+
+    </div>
+    <p id="mensajeCompraMinima" class="mensaje-minimo"></p>
+    <div class="total">
+      Total: $<span id="total">0</span>
+    </div>
+    <!-- <p id="mensajeHorario" class="mensaje-minimo hidden"></p> -->
+    <button id="revisarPedido" class="btn-principal" disabled>Revisar pedido</button>
+  </div>
+</div>
+
+<!-- MODAL RESUMEN -->
+<div id="modalResumen" class="modal hidden">
+  <div class="modal-content">
+    <button class="cerrar" id="cerrarResumen">✕</button>
+    <h2>Resumen del pedido</h2>
+    <pre id="resumenPedido"></pre>
+    <button id="enviarWhatsapp" class="btn-principal">Enviar por WhatsApp</button>
+  </div>
+</div>
+
+<!-- MODAL ELIMINAR -->
+<div id="modalEliminar" class="modal hidden">
+  <div class="modal-content small">
+    <h3>Eliminar producto</h3>
+    <p>¿Querés eliminar este producto del carrito?</p>
+    <div class="acciones">
+      <button onclick="cancelarEliminar()">Cancelar</button>
+      <button class="danger" onclick="confirmarEliminar()">Eliminar</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="toast hidden">Producto agregado</div>
+
+<!-- boton carrito en el footer al agregar pedido -->
+
+<div id="mobileCartBar" class="mobile-cart">
+  <div class="mobile-cart-info">
+    <span id="mobileCartCantidad">0 productos</span>
+    <strong id="mobileCartTotal">$0</strong>
+  </div>
+  <button id="mobileCartBtn">Ver mi carrito</button>
+</div>
+
+<!-- MODAL -->
+<div id="modalProducto" class="modal hidden">
+  <div class="modal-content producto-modal">
+    <button class="cerrar" id="cerrarProducto">✕</button>
+
+    <div class="producto-galeria">
+      <button class="galeria-btn prev">‹</button>
+      <img id="productoImagen" src="" alt="">
+      <div class="galeria-indicadores" id="galeriaIndicadores"></div>
+
+      <button class="galeria-btn next">›</button>
+    </div>
+
+    <h3 id="productoNombre"></h3>
+    <strong id="productoPrecio"></strong>
+
+    <div id="colorContainer" class="hidden resumen-colores">
+      <button id="btnElegirColores" class="btn-secundario">
+        Elegir colores
+      </button>
+
+      <small id="colorSeleccionadoInfo" class="hidden">
+        Colores agregados ✔
+      </small>
+      <small id="errorColor" class="error hidden">
+        Debés seleccionar al menos un color
+      </small>
+
+    </div>
+
+
+
+
+    <div id="productoAcciones" class="producto-acciones">
+    <button id="productoAgregar" class="btn-principal">
+      Agregar al carrito
+    </button>
+
+    <div id="productoCantidad" class="cantidad-controles hidden">
+      <button id="productoMenos">−</button>
+      <span id="productoCantidadValor">1</span>
+      <button id="productoMas">+</button>
+    </div>
+  </div>
+
+  </div>
+</div>
+
+
+<div id="pedidoOverlay" class="pedido-overlay hidden">
+  <div class="pedido-bolita"></div>
+  <div class="pedido-texto">Pedido listo para enviar</div>
+  <audio id="pedidoSound" src="sound/confirm.mp3" preload="auto"></audio>
+</div>
+
+<!-- MINI MODAL COLORES -->
+<div id="modalColores" class="modal hidden">
+  <div class="modal-content small">
+
+    <h3>Elegí un color</h3>
+
+    <div id="listaColores" class="lista-colores">
+      <!-- JS va a renderizar acá los colores -->
+    </div>
+
+    <button id="cerrarColores" class="btn-principal">
+      OK
+    </button>
+
+  </div>
+</div>
+
+
+<script type="module" src="javascript/main.js"></script>
+</body>
+</html>
+
+
+
+
