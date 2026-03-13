@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
   <title>ÚtilesShop</title>
   <link rel="stylesheet" href="style/style.css">
 </head>
@@ -12,7 +15,11 @@
   <div class="contenedor-titulo-iconocarrito">
     <!-- <div class="logo">📦 ÚtilesShop</div> -->
      <div  class="contenedor_logo">
+<<<<<<< HEAD
          <img id="logoBtn" src="./assets/logo.webp" class="logo" alt="">
+=======
+         <img id="logoBtn" src="./assets/logo4.png" class="logo" alt="">
+>>>>>>> b213b43 (reformulacionDeWeb)
      </div>
     <button id="btnCarrito" class="carrito-btn">
       🛒 <span id="carritoCount">0</span>
@@ -35,12 +42,53 @@
 
 </header>
 
-<main class="contenedor">
+<section id="carouselSection" class="carousel-wrapper">
+  <div class="carousel-container">
+    <div class="carousel-track">
+
+      <div class="slide">
+        <picture>
+          <source srcset="assets/banner3-desktop.webp" media="(max-width: 768px)">
+          <img src="assets/banner3-desktop.webp" alt="Ofertas especiales">
+        </picture>
+      </div>
+
+      <div class="slide">
+        <picture>
+          <source srcset="assets/banner2-desktop.webp" media="(max-width: 768px)">
+          <img src="assets/banner2-desktop.webp" alt="Envíos rápidos">
+        </picture>
+      </div>
+
+      <div class="slide">
+        <picture>
+          <source srcset="assets/banner1-desktop.webp" media="(max-width: 768px)">
+          <img src="assets/banner1-desktop.webp" alt="Sorteos especiales">
+        </picture>
+      </div>
+
+    </div>
+
+    <!-- Flechas (solo PC) -->
+    <button class="arrow left">&#10094;</button>
+    <button class="arrow right">&#10095;</button>
+  </div>
+
+  <div class="dots"></div>
+</section>
+
+<!-- <main class="contenedor">
   <h1>Productos</h1>
   <div id="productos" class="productos"></div>
   <h1>Otros productos</h1>
   <div id="otrosProductos" class="productos"></div>
-</main>
+
+  <p id="mensaje-sin-resultados" class="mensaje-oculto">
+    No se encontraron productos
+  </p>
+
+</main> -->
+<main id="mainContenido"></main>
 
 <!-- MODAL CARRITO -->
 <div id="modalCarrito" class="modal hidden">
@@ -48,7 +96,7 @@
     <button class="cerrar" id="cerrarCarrito">✕</button>
     <h2 class="tituloCarrito">Tu carrito</h2>
 
-    <div id="carritoItems" class="carritoItems"></div>
+    <div id="carrito-items" class="carrito-items"></div>
 
     <div class="form-envio">
       <input id="direccion" placeholder="Dirección (obligatoria)">
@@ -90,14 +138,19 @@
 </div>
 
 <!-- MODAL ELIMINAR -->
-<div id="modalEliminar" class="modal hidden">
+<div id="modalEliminar" class="modal modal-confirm hidden">
   <div class="modal-content small">
+
+    <span class="cerrar-modal" onclick="cancelarEliminar()">&times;</span>
+
     <h3>Eliminar producto</h3>
     <p>¿Querés eliminar este producto del carrito?</p>
+
     <div class="acciones">
       <button onclick="cancelarEliminar()">Cancelar</button>
       <button class="danger" onclick="confirmarEliminar()">Eliminar</button>
     </div>
+
   </div>
 </div>
 

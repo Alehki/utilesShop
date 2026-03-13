@@ -2,6 +2,9 @@
 import { agregarItem, restarItem, calcularTotalDesde } from "./carrito-core.js";
 document.addEventListener("DOMContentLoaded", () => {
 
+  let vistaActual = "categorias";
+  let categoriaActiva = null;
+
 
   window.onerror = function (msg, url, line, col, error) {
     alert("Error: " + msg + " en línea: " + line);
@@ -16,32 +19,120 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+  /* funciones para las categorias */
+  function obtenerCategorias() {
+    const categoriasUnicas = new Set(
+      TODOS_LOS_PRODUCTOS.map(p => p.categoria)
+    );
 
-  const productos = [
-    { id: 1, nombre: "Resaltadores", precio: 1200, img: "assets/resaltadores/resaltador_1.webp", imagenes: ["assets/resaltadores/resaltador_1.webp","assets/resaltadores/resaltador_2.webp", "assets/resaltadores/resaltador_3.webp" ], colores: ["Amarillo", "Verde", "Rosa"] },
-    { id: 2, nombre: "Fibras", precio: 2100, img: "assets/fibras/fibras_1.webp", imagenes: ["assets/fibras/fibras_1.webp", "assets/fibras/fibras_2.webp", "assets/fibras/fibras_3.webp" ] },
-    { id: 3, nombre: "Goma de Borrar", precio: 900, img: "assets/goma_de_borrar/goma_1.webp", imagenes: ["assets/goma_de_borrar/goma_1.webp", "assets/goma_de_borrar/goma_2.webp", "assets/goma_de_borrar/goma_3.webp" ] },
-    { id: 4, nombre: "Lapicera Azul Bic", precio: 1200, img: "assets/lapicera_azul_bic/lapicera_azul_bic_1.webp",imagenes: ["assets/lapicera_azul_bic/lapicera_azul_bic_1.webp", "assets/lapicera_azul_bic/lapicera_azul_bic_2.webp", "assets/lapicera_azul_bic/lapicera_azul_bic_3.webp" ] },
-    { id: 5, nombre: "Lapicera Azul Filgo", precio: 1200, img: "assets/lapicera_azul_filgo/lapicera_azul_filgo_1.webp",imagenes: ["assets/lapicera_azul_filgo/lapicera_azul_filgo_1.webp", "assets/lapicera_azul_filgo/lapicera_azul_filgo_2.webp", "assets/lapicera_azul_filgo/lapicera_azul_filgo_3.webp" ] },
-    { id: 6, nombre: "Lapicera Negro Bic", precio: 1200, img: "assets/lapicera_negro_bic/lapicera_negra_bic_1.webp", imagenes: ["assets/lapicera_negro_bic/lapicera_negra_bic_1.webp", "assets/lapicera_negro_bic/lapicera_negra_bic_2.webp", "assets/lapicera_negro_bic/lapicera_negra_bic_3.webp" ] },
-    { id: 7, nombre: "Lapices de color x 24", precio: 1200, img: "assets/lapices_de_color_x24/lapices_de_colorx24_1.webp", imagenes: ["assets/lapices_de_color_x24/lapices_de_colorx24_1.webp", "assets/lapices_de_color_x24/lapices_de_colorx24_2.webp", "assets/lapices_de_color_x24/lapices_de_colorx24_3.webp" ] },
-    { id: 8, nombre: "Lapiz con brillos", precio: 1200, img: "assets/lapiz_brillo/lapiz_brillo_1.webp", imagenes: ["assets/lapiz_brillo/lapiz_brillo_1.webp", "assets/lapiz_brillo/lapiz_brillo_2.webp", "assets/lapiz_brillo/lapiz_brillo_3.webp" ] },
-    { id: 9, nombre: "Cuadernillo universitario cuadriculado", precio: 1200, img: "assets/cuadernillo_universitario_cuadriculado/cuadernillo_cuadriculado_1.webp", imagenes: ["assets/cuadernillo_universitario_cuadriculado/cuadernillo_cuadriculado_1.webp", "assets/cuadernillo_universitario_cuadriculado/cuadernillo_cuadriculado_2.webp", "assets/cuadernillo_universitario_cuadriculado/cuadernillo_cuadriculado_3.webp" ] },
-    { id: 10, nombre: "Cuadernillo universitario rayado", precio: 1200, img: "assets/cuadernillo_universitario_rayado/cuadernillo_rayado_1.webp", imagenes: ["assets/cuadernillo_universitario_rayado/cuadernillo_rayado_1.webp", "assets/cuadernillo_universitario_rayado/cuadernillo_rayado_2.webp", "assets/cuadernillo_universitario_rayado/cuadernillo_rayado_3.webp" ] },
-    { id: 11, nombre: "Liqui", precio: 2100, img: "assets/liqui/liqui_1.webp", imagenes: ["assets/liqui/liqui_1.webp", "assets/liqui/liqui_2.webp", "assets/liqui/liqui_3.webp" ] },
-    { id: 12, nombre: "Liqui Filgo", precio: 2100, img: "assets/liqui_filgo/liqui_filgo_1.webp", imagenes: ["assets/liqui_filgo/liqui_filgo_1.webp", "assets/liqui_filgo/liqui_filgo_2.webp", "assets/liqui_filgo/liqui_filgo_3.webp" ] },
-    { id: 13, nombre: "Sacapuntas económico", precio: 2100, img: "assets/sacapuntas_barat/sacapuntas_economico_1.webp", imagenes: ["assets/sacapuntas_barat/sacapuntas_economico_1.webp", "assets/sacapuntas_barat/sacapuntas_economico_2.webp", "assets/sacapuntas_barat/sacapuntas_economico_3.webp" ] },
-    { id: 14, nombre: "Sacapuntas", precio: 2100, img: "assets/sacapuntas_caro/sacapuntas_1.webp", imagenes: ["assets/sacapuntas_caro/sacapuntas_1.webp", "assets/sacapuntas_caro/sacapuntas_2.webp", "assets/sacapuntas_caro/sacapuntas_3.webp" ] },
-    { id: 15, nombre: "lapiz negro (amarillo)", precio: 2100, img: "assets/lapiz_negro_(amarillo)/lapiz_negro_(amarillo)_1.webp", imagenes: ["assets/lapiz_negro_(amarillo)/lapiz_negro_(amarillo)_1.webp", "assets/lapiz_negro_(amarillo)/lapiz_negro_(amarillo)_2.webp", "assets/lapiz_negro_(amarillo)/lapiz_negro_(amarillo)_3.webp" ] },
-    { id: 16, nombre: "lapiz negro (rojo)", precio: 2100, img: "assets/lapiz_negro_(rojo)/lapiz_negro_(rojo)_1.webp", imagenes: ["assets/lapiz_negro_(rojo)/lapiz_negro_(rojo)_1.webp", "assets/lapiz_negro_(rojo)/lapiz_negro_(rojo)_2.webp", "assets/lapiz_negro_(rojo)/lapiz_negro_(rojo)_3.webp" ] },
+    return Array.from(categoriasUnicas).map(cat => ({
+      id: cat,
+      nombre: cat.charAt(0).toUpperCase() + cat.slice(1)
+    }));
+  }
+
+  function renderCategorias() {
+    main.innerHTML = `
+      <h2 class="titulo-seccion">Categorías</h2>
+      <div class="grid-categorias" id="gridCategorias"></div>
+    `;
+
+    const grid = document.getElementById("gridCategorias");
+
+    const categorias = obtenerCategorias();
+
+    categorias.forEach(cat => {
+      const card = document.createElement("div");
+      card.className = "card-categoria";
+
+    card.innerHTML = `
+      <div class="categoria-img">
+        <img src="assets/categorias/${cat.id}.webp" alt="${cat.nombre}">
+      </div>
+
+      <div class="categoria-info">
+        <span class="categoria-nombre">${cat.nombre}</span>
+        <span class="categoria-arrow">›</span>
+      </div>
+    `;
+
+      card.addEventListener("click", () => {
+        vistaActual = "productos";
+        categoriaActiva = cat.id;
+        renderTodo();
+      });
+
+      grid.appendChild(card);
+    });
+  }
+
+  function renderProductosCategoria(categoria) {
+
+    vistaActual = "productos";
+    categoriaActiva = categoria;
+
+    main.innerHTML = `
+      <div class="header-categoria">
+        <button class="btn-volver">← Volver</button>
+        <h2 class="titulo-seccion">${categoria}</h2>
+      </div>
+      <div id="contenedorProductos" class="productos"></div>
+    `;
+
+    document.querySelector(".btn-volver").addEventListener("click", () => {
+      vistaActual = "categorias";
+      categoriaActiva = null;
+      renderTodo();
+    });
+
+    const contenedor = document.getElementById("contenedorProductos");
+
+    const productosFiltrados = TODOS_LOS_PRODUCTOS.filter(
+      p => p.categoria === categoria
+    );
+
+    renderSeccion(productosFiltrados, contenedor, textoBusqueda);
+  }
+
+  const libreria = [
+    { id: 1, nombre: "Resaltadores", precio: 1200, categoria: "libreria", img: "assets/resaltadores/resaltador_1.webp", imagenes: ["assets/resaltadores/resaltador_1.webp","assets/resaltadores/resaltador_2.webp", "assets/resaltadores/resaltador_3.webp" ], colores: ["Amarillo", "Verde", "Rosa"], tags: ["libro", "estudio", "escuela", "apunte"] },
+    { id: 2, nombre: "Fibras", precio: 2100, categoria: "libreria", img: "assets/fibras/fibras_1.webp", imagenes: ["assets/fibras/fibras_1.webp", "assets/fibras/fibras_2.webp", "assets/fibras/fibras_3.webp" ] },
+    { id: 3, nombre: "Goma de Borrar", precio: 900, categoria: "libreria", img: "assets/goma_de_borrar/goma_1.webp", imagenes: ["assets/goma_de_borrar/goma_1.webp", "assets/goma_de_borrar/goma_2.webp", "assets/goma_de_borrar/goma_3.webp" ] },
+    { id: 4, nombre: "Lapicera Azul Bic", precio: 1200,categoria: "libreria", img: "assets/lapicera_azul_bic/lapicera_azul_bic_1.webp",imagenes: ["assets/lapicera_azul_bic/lapicera_azul_bic_1.webp", "assets/lapicera_azul_bic/lapicera_azul_bic_2.webp", "assets/lapicera_azul_bic/lapicera_azul_bic_3.webp" ] },
+    { id: 5, nombre: "Lapicera Azul Filgo", precio: 1200,categoria: "libreria", img: "assets/lapicera_azul_filgo/lapicera_azul_filgo_1.webp",imagenes: ["assets/lapicera_azul_filgo/lapicera_azul_filgo_1.webp", "assets/lapicera_azul_filgo/lapicera_azul_filgo_2.webp", "assets/lapicera_azul_filgo/lapicera_azul_filgo_3.webp" ] },
+    { id: 6, nombre: "Lapicera Negro Bic", precio: 1200, categoria: "libreria",img: "assets/lapicera_negro_bic/lapicera_negra_bic_1.webp", imagenes: ["assets/lapicera_negro_bic/lapicera_negra_bic_1.webp", "assets/lapicera_negro_bic/lapicera_negra_bic_2.webp", "assets/lapicera_negro_bic/lapicera_negra_bic_3.webp" ] },
+    { id: 7, nombre: "Lapices de color x 24", precio: 1200,categoria: "libreria", img: "assets/lapices_de_color_x24/lapices_de_colorx24_1.webp", imagenes: ["assets/lapices_de_color_x24/lapices_de_colorx24_1.webp", "assets/lapices_de_color_x24/lapices_de_colorx24_2.webp", "assets/lapices_de_color_x24/lapices_de_colorx24_3.webp" ] },
+    { id: 8, nombre: "Lapiz con brillos", precio: 1200, categoria: "libreria",img: "assets/lapiz_brillo/lapiz_brillo_1.webp", imagenes: ["assets/lapiz_brillo/lapiz_brillo_1.webp", "assets/lapiz_brillo/lapiz_brillo_2.webp", "assets/lapiz_brillo/lapiz_brillo_3.webp" ] },
+    { id: 9, nombre: "Cuadernillo universitario cuadriculado", precio: 1200,categoria: "libreria", img: "assets/cuadernillo_universitario_cuadriculado/cuadernillo_cuadriculado_1.webp", imagenes: ["assets/cuadernillo_universitario_cuadriculado/cuadernillo_cuadriculado_1.webp", "assets/cuadernillo_universitario_cuadriculado/cuadernillo_cuadriculado_2.webp", "assets/cuadernillo_universitario_cuadriculado/cuadernillo_cuadriculado_3.webp" ], tags: ["libro", "hojas", "estudio", "escuela"] },
+    { id: 10, nombre: "Cuadernillo universitario rayado", precio: 1200,categoria: "libreria", img: "assets/cuadernillo_universitario_rayado/cuadernillo_rayado_1.webp", imagenes: ["assets/cuadernillo_universitario_rayado/cuadernillo_rayado_1.webp", "assets/cuadernillo_universitario_rayado/cuadernillo_rayado_2.webp", "assets/cuadernillo_universitario_rayado/cuadernillo_rayado_3.webp" ], tags: ["libro", "hojas", "estudio", "escuela"] },
+    { id: 11, nombre: "Liqui", precio: 2100, categoria: "libreria", img: "assets/liqui/liqui_1.webp", imagenes: ["assets/liqui/liqui_1.webp", "assets/liqui/liqui_2.webp", "assets/liqui/liqui_3.webp" ] },
+    { id: 12, nombre: "Liqui Filgo", precio: 2100, categoria: "libreria",img: "assets/liqui_filgo/liqui_filgo_1.webp", imagenes: ["assets/liqui_filgo/liqui_filgo_1.webp", "assets/liqui_filgo/liqui_filgo_2.webp", "assets/liqui_filgo/liqui_filgo_3.webp" ] },
+    { id: 13, nombre: "Sacapuntas económico", precio: 2100,categoria: "libreria", img: "assets/sacapuntas_barat/sacapuntas_economico_1.webp", imagenes: ["assets/sacapuntas_barat/sacapuntas_economico_1.webp", "assets/sacapuntas_barat/sacapuntas_economico_2.webp", "assets/sacapuntas_barat/sacapuntas_economico_3.webp" ] },
+    { id: 14, nombre: "Sacapuntas", precio: 2100, categoria: "libreria",img: "assets/sacapuntas_caro/sacapuntas_1.webp", imagenes: ["assets/sacapuntas_caro/sacapuntas_1.webp", "assets/sacapuntas_caro/sacapuntas_2.webp", "assets/sacapuntas_caro/sacapuntas_3.webp" ] },
+    { id: 15, nombre: "lapiz negro (amarillo)", precio: 2100,categoria: "libreria", img: "assets/lapiz_negro_(amarillo)/lapiz_negro_(amarillo)_1.webp", imagenes: ["assets/lapiz_negro_(amarillo)/lapiz_negro_(amarillo)_1.webp", "assets/lapiz_negro_(amarillo)/lapiz_negro_(amarillo)_2.webp", "assets/lapiz_negro_(amarillo)/lapiz_negro_(amarillo)_3.webp" ] },
+    { id: 16, nombre: "lapiz negro (rojo)", precio: 2100, categoria: "libreria",img: "assets/lapiz_negro_(rojo)/lapiz_negro_(rojo)_1.webp", imagenes: ["assets/lapiz_negro_(rojo)/lapiz_negro_(rojo)_1.webp", "assets/lapiz_negro_(rojo)/lapiz_negro_(rojo)_2.webp", "assets/lapiz_negro_(rojo)/lapiz_negro_(rojo)_3.webp" ] },
   ];
 
   const otrosProductos = [
-    { id: 17, nombre: "Rolito 10kg", precio: 9500, img: "assets/rolito/rolito_10k_1.webp", imagenes: ["assets/rolito/rolito_10k_1.webp", "assets/rolito/rolito_10k_2.webp", "assets/rolito/rolito_10k_3.webp" ] },
+    { id: 17, nombre: "Rolito 10kg", precio: 9500,categoria: "hielo", img: "assets/rolito/rolito_10k_1.webp", imagenes: ["assets/rolito/rolito_10k_1.webp", "assets/rolito/rolito_10k_2.webp", "assets/rolito/rolito_10k_3.webp" ], tags: ["hielo"] },
   ]
 
-  const TODOS_LOS_PRODUCTOS = [...productos, ...otrosProductos];
+  const almacen = [
+    { id: 18, nombre: "Rolito 10kg", precio: 9500,categoria: "almacen", img: "assets/rolito/rolito_10k_1.webp", imagenes: ["assets/rolito/rolito_10k_1.webp", "assets/rolito/rolito_10k_2.webp", "assets/rolito/rolito_10k_3.webp" ], tags: ["hielo"] },
+  ]
 
+  const bebidas = [
+    { id: 19, nombre: "Rolito 10kg", precio: 9500,categoria: "bebidas", img: "assets/rolito/rolito_10k_1.webp", imagenes: ["assets/rolito/rolito_10k_1.webp", "assets/rolito/rolito_10k_2.webp", "assets/rolito/rolito_10k_3.webp" ], tags: ["hielo"] },
+  ]
+
+  const TODOS_LOS_PRODUCTOS = [...libreria, ...otrosProductos, ...almacen, ...bebidas];
+
+  const listas = {
+    libreria: libreria,
+    otrosProductos: otrosProductos,
+    almacen: almacen,
+    bebidas: bebidas,
+  };
 
   let textoBusqueda = "";
   // Cargar carrito de forma segura
@@ -60,17 +151,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   /* DOM */
-  const productosDiv = document.getElementById("productos");
+  // const productosDiv = document.getElementById("productos");
   const carritoCount = document.getElementById("carritoCount");
   const modalCarrito = document.getElementById("modalCarrito");
-  const carritoItems = document.getElementById("carritoItems");
+  const carritoItems = document.getElementById("carrito-items");
   const totalSpan = document.getElementById("total");
   const modalResumen = document.getElementById("modalResumen");
   const resumenPedido = document.getElementById("resumenPedido");
   const toast = document.getElementById("toast");
 
+  const main = document.getElementById("mainContenido");
   /* probando */
-  const otrosProductosDiv = document.getElementById("otrosProductos");
+  // const otrosProductosDiv = document.getElementById("otrosProductos");
 
   /* para el boton del footer */
   const mobileCartBar = document.getElementById("mobileCartBar");
@@ -130,11 +222,25 @@ document.addEventListener("DOMContentLoaded", () => {
     actualizarBotonRevisar();
   }
 
-  function renderTodo() {
-    renderSeccion(productos, productosDiv);
-    renderSeccion(otrosProductos, otrosProductosDiv);
+  function normalizarTexto(texto) {
+    return texto
+      .toLowerCase()
+      .normalize("NFD")                // separa letras y tildes
+      .replace(/[\u0300-\u036f]/g, ""); // elimina tildes
   }
 
+  function renderTodo() {
+    const carousel = document.getElementById("carouselSection");
+
+    if (vistaActual === "categorias") {
+      if (carousel) carousel.style.display = "block";
+      renderCategorias();
+    } else if (vistaActual === "productos") {
+      if (carousel) carousel.style.display = "none";
+      renderProductosCategoria(categoriaActiva);
+    }
+    console.log("Vista actual:", vistaActual);
+  }
 
 
   function mostrarResumenSeleccion() {
@@ -221,11 +327,23 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.style.overflow = "";
   }
 
+  function actualizarScrollGlobal() {
+    const hayModalAbierta = document.querySelector(".modal:not(.hidden)");
+
+    if (hayModalAbierta) {
+      bloquearScroll();
+    } else {
+      habilitarScroll();
+    }
+  }
+
   function abrirProducto(id, forzarColor = false) {
     
-    productoActivo =
-    productos.find(p => p.id === id) ||
-    otrosProductos.find(p => p.id === id);
+    productoActivo = Object
+      .values(listas)
+      .flat()
+      .find(p => p.id === id);
+
 
     if (!productoActivo) return;
 
@@ -372,6 +490,11 @@ document.addEventListener("DOMContentLoaded", () => {
       productoAgregar.classList.add("hidden");
       productoCantidad.classList.remove("hidden");
       productoCantidadValor.textContent = totalEnCarrito;
+      if (totalEnCarrito === 1) {
+        productoMenos.textContent = "🗑";
+      } else {
+        productoMenos.textContent = "−";
+      }
     } else {
       productoAgregar.classList.remove("hidden");
       productoCantidad.classList.add("hidden");
@@ -409,7 +532,165 @@ document.addEventListener("DOMContentLoaded", () => {
 }
 
 
+  /*  */
+  // ================= CARRUSEL PRO =================
+const track = document.querySelector(".carousel-track");
+let slides = document.querySelectorAll(".slide");
+const nextButton = document.querySelector(".right");
+const prevButton = document.querySelector(".left");
+const dotsNav = document.querySelector(".dots");
 
+let index = 1;
+let isAnimating = false;
+let autoplayTimeout;
+
+/* Clonar primera y última */
+const firstClone = slides[0].cloneNode(true);
+const lastClone = slides[slides.length - 1].cloneNode(true);
+
+track.appendChild(firstClone);
+track.insertBefore(lastClone, slides[0]);
+
+slides = document.querySelectorAll(".slide");
+
+/* Posición inicial en porcentaje */
+track.style.transform = `translateX(-${index * 100}%)`;
+updateActiveSlide();
+
+/* Crear dots */
+dotsNav.innerHTML = "";
+for (let i = 0; i < slides.length - 2; i++) {
+  const dot = document.createElement("span");
+  dot.classList.add("dot");
+  if (i === 0) dot.classList.add("active");
+
+  dot.addEventListener("click", () => {
+    moveToSlide(i + 1);
+    resetAutoplay();
+  });
+
+  dotsNav.appendChild(dot);
+}
+
+const dots = document.querySelectorAll(".dot");
+
+function updateDots() {
+  dots.forEach(dot => dot.classList.remove("active"));
+
+  let realIndex = index - 1;
+
+  if (realIndex < 0) realIndex = dots.length - 1;
+  if (realIndex >= dots.length) realIndex = 0;
+
+  dots[realIndex].classList.add("active");
+}
+
+function updateActiveSlide() {
+
+  slides.forEach(slide => slide.classList.remove("active"));
+
+  slides[index].classList.add("active");
+
+  // sincronizar clones
+  if (index === 1) {
+    slides[slides.length - 1].classList.add("active"); 
+  }
+
+  if (index === slides.length - 2) {
+    slides[0].classList.add("active");
+  }
+
+}
+
+function moveToSlide(newIndex) {
+  if (isAnimating) return;
+
+  isAnimating = true;
+
+  const maxIndex = slides.length - 2;
+
+  if (newIndex > maxIndex) {
+
+    track.style.transition = "none";
+    index = 0;
+    track.style.transform = `translateX(-${index * 100}%)`;
+
+    requestAnimationFrame(() => {
+      track.style.transition = "transform 0.5s ease-in-out";
+      index = 1;
+      track.style.transform = `translateX(-${index * 100}%)`;
+      updateDots();
+      updateActiveSlide();
+    });
+
+    return;
+  }
+
+  index = newIndex;
+
+  track.style.transition = "transform 0.5s ease-in-out";
+  track.style.transform = `translateX(-${index * 100}%)`;
+
+  updateDots();
+  updateActiveSlide();
+}
+
+/* Flechas */
+nextButton.addEventListener("click", () => {
+  moveToSlide(index + 1);
+  resetAutoplay();
+});
+
+prevButton.addEventListener("click", () => {
+  moveToSlide(index - 1);
+  resetAutoplay();
+});
+
+/* Loop infinito limpio */
+track.addEventListener("transitionend", () => {
+  isAnimating = false;
+});
+
+/* Autoplay */
+function startAutoplay() {
+  autoplayTimeout = setTimeout(() => {
+    moveToSlide(index + 1);
+    startAutoplay();
+  }, 4000);
+}
+
+function resetAutoplay() {
+  clearTimeout(autoplayTimeout);
+  startAutoplay();
+}
+
+startAutoplay();
+
+/* Swipe móvil */
+let startXX = 0;
+
+track.addEventListener("touchstart", e => {
+  startXX = e.touches[0].clientX;
+});
+
+track.addEventListener("touchend", e => {
+  let endX = e.changedTouches[0].clientX;
+
+  if (startXX - endX > 50) {
+    moveToSlide(index + 1);
+    resetAutoplay();
+  }
+
+  if (endX - startXX > 50) {
+    moveToSlide(index - 1);
+    resetAutoplay();
+  }
+});
+
+track.addEventListener("click", () => {
+  moveToSlide(index + 1);
+  resetAutoplay();
+});
 
   /* logica de horarios */
 
@@ -636,10 +917,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const radioNecesario = Math.sqrt((w/2)**2 + (h/2)**2);
     const scale = radioNecesario / (diametroInicial / 2);
 
-    // Aplicar escala usando transform en keyframes
-    bolita.style.animation = `rippleJS 1.5s ease-out forwards`;
     bolita.style.setProperty('--scale-final', scale);
-
     overlay.classList.add("active");
 
     // Ocultar overlay después de la animación
@@ -705,6 +983,13 @@ document.addEventListener("DOMContentLoaded", () => {
     guardar();
   };
 
+  window.eliminarDesdeCard = function(id) {
+    const itemKey = Object.keys(carrito).find(key => carrito[key].id === id);
+    if (!itemKey) return;
+
+    pedirEliminar(itemKey);
+  };
+
 
   console.log("ANTES de render");
 
@@ -712,9 +997,17 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderSeccion(listaProductos, contenedor, textoFiltro = "") {
     contenedor.innerHTML = "";
 
-    const productosFiltrados = listaProductos.filter(p =>
-      p.nombre.toLowerCase().includes(textoFiltro.toLowerCase())
-    );
+    const textoNormalizado = normalizarTexto(textoFiltro);
+
+    const productosFiltrados = listaProductos.filter(p => {
+      const nombre = normalizarTexto(p.nombre || "");
+      const colores = normalizarTexto((p.colores || []).join(" "));
+      const tags = normalizarTexto((p.tags || []).join(" "));
+
+      const textoCompleto = nombre + " " + colores + " " + tags;
+
+      return textoCompleto.includes(textoNormalizado);
+    });
 
     let html = "";
 
@@ -737,10 +1030,14 @@ document.addEventListener("DOMContentLoaded", () => {
                   </button>
                 `
                 : `
-                  <button onclick="event.stopPropagation(); restar(${p.id})">−</button>
-                  <span>${cant}</span>
-                  <button onclick="event.stopPropagation(); agregarDesdeCard(${p.id})">+</button>
-                `
+                ${
+                  cant === 1
+                    ? `<button onclick="event.stopPropagation(); eliminarDesdeCard(${p.id})">🗑</button>`
+                    : `<button onclick="event.stopPropagation(); restar(${p.id})">−</button>`
+                }
+                <span>${cant}</span>
+                <button onclick="event.stopPropagation(); agregarDesdeCard(${p.id})">+</button>
+              `
             }
           </div>
         </div>
@@ -748,6 +1045,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     contenedor.innerHTML = html;
+
+    return productosFiltrados.length; //
   }
 
   /* CARRITO */
@@ -823,8 +1122,14 @@ document.addEventListener("DOMContentLoaded", () => {
       controles.classList.add("controles");
 
       const btnMenos = document.createElement("button");
-      btnMenos.textContent = "−";
-      btnMenos.onclick = () => restarDesdeCarrito(key);
+
+      if (p.cantidad === 1) {
+        btnMenos.textContent = "🗑";
+        btnMenos.onclick = () => pedirEliminar(key);
+      } else {
+        btnMenos.textContent = "−";
+        btnMenos.onclick = () => restarDesdeCarrito(key);
+      }
 
       const spanCantidad = document.createElement("span");
       spanCantidad.textContent = p.cantidad;
@@ -964,19 +1269,33 @@ document.addEventListener("DOMContentLoaded", () => {
   window.pedirEliminar = function(key) {
     idEliminar = key;
     document.getElementById("modalEliminar").classList.remove("hidden");
+    actualizarScrollGlobal();
   };
 
 
   window.cancelarEliminar = function() {
     idEliminar = null;
     document.getElementById("modalEliminar").classList.add("hidden");
+    actualizarScrollGlobal();
   };
 
   window.confirmarEliminar = function() {
+
     delete carrito[idEliminar];
+
     guardar();
     renderCarrito();
-    cancelarEliminar();
+
+    cancelarEliminar(); // cierra modalEliminar
+
+    // 🔥 cerrar modalProducto si está abierto
+    const modalProducto = document.getElementById("modalProducto");
+    if (!modalProducto.classList.contains("hidden")) {
+      modalProducto.classList.add("hidden");
+    }
+
+    idEliminar = null;
+    actualizarScrollGlobal();
   };
 
   /*Limpiear msj de error*/
@@ -1181,6 +1500,18 @@ document.addEventListener("DOMContentLoaded", () => {
   productoMenos.onclick = () => {
     const color = document.getElementById("colorSelect")?.value || null;
 
+    const key = Object.keys(carrito).find(k => {
+      const item = carrito[k];
+      return item.id === productoActivo.id && item.color === color;
+    });
+
+    if (!key) return;
+
+    if (carrito[key].cantidad === 1) {
+      pedirEliminar(key);
+      return;
+    }
+
     carrito = restarItem(carrito, productoActivo.id, color, 1);
     guardar();
     renderCarrito();
@@ -1222,16 +1553,13 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   }
 
-
-
-
   /* INIT */
   renderTodo();
   actualizarCount();
   actualizarEstadoHorario();
 
   setInterval(actualizarEstadoHorario, 60 * 1000);
-
+  renderTodo();
 });
 
 
