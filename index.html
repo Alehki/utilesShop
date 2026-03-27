@@ -14,9 +14,12 @@
 <header class="header">
   <div class="contenedor-titulo-iconocarrito">
     <!-- <div class="logo">📦 ÚtilesShop</div> -->
-     <div  class="contenedor_logo">
+     <!-- <div  class="contenedor_logo">
          <img id="logoBtn" src="./assets/logo4.png" class="logo" alt="">
-     </div>
+     </div> -->
+     <div class="logo-text" id="logoBtn">
+      Market<span>Go</span>
+    </div>
     <button id="btnCarrito" class="carrito-btn">
       🛒 <span id="carritoCount">0</span>
     </button>
@@ -37,7 +40,10 @@
   </div>
 
 </header>
-
+<div class="hero">
+  <h1>Comprá fácil por <span class="highlight">WhatsApp</span></h1>
+  <p>Super, kiosco y más • te lo llevamos a tu casa en minutos</p>
+</div>
 <section id="carouselSection" class="carousel-wrapper">
   <div class="carousel-container">
     <div class="carousel-track">
@@ -73,17 +79,14 @@
   <div class="dots"></div>
 </section>
 
-<!-- <main class="contenedor">
-  <h1>Productos</h1>
-  <div id="productos" class="productos"></div>
-  <h1>Otros productos</h1>
-  <div id="otrosProductos" class="productos"></div>
+<section class="seccion-destacados">
+  <div class="contenedor">
+    <h2 class="titulo-seccion">Destacados</h2>
+    
+    <div class="destacados-scroll" id="destacadosContainer"></div>
+  </div>
+</section>
 
-  <p id="mensaje-sin-resultados" class="mensaje-oculto">
-    No se encontraron productos
-  </p>
-
-</main> -->
 <main id="mainContenido"></main>
 
 <!-- MODAL CARRITO -->

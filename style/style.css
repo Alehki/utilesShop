@@ -2,11 +2,41 @@
    VARIABLES
 ===================================================== */
 
-:root{
+/* :root{
   --color-principal:#ED4C9B;
   --color-texto:#111;
   --color-borde:#ddd;
   --color-fondo:#ffffff;
+} */
+
+:root{
+  /* 🎨 BRAND */
+  --color-primary: #ED4C9B;
+  --color-primary-hover: #d63f88;
+
+  /* ⚫ NEUTROS */
+  --color-black: #111;
+  --color-gray-dark: #444;
+  --color-gray: #888;
+  --color-gray-light: #f5f5f5;
+  --color-border: #e5e5e5;
+
+  /* ⚪ FONDO */
+  --color-bg: #ffffff;
+
+  /* ✨ UI */
+  --radius: 14px;
+  --shadow-soft: 0 8px 20px rgba(0,0,0,.06);
+  --shadow-hover: 0 12px 28px rgba(0,0,0,.10);
+
+  /* FUENTES */
+  --font-main: "Inter", sans-serif;
+
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-md: 16px;
+  --text-lg: 20px;
+  --text-xl: 26px;
 }
 
 /* =====================================================
@@ -16,14 +46,16 @@
 * {
   box-sizing: border-box;
   /* font-family: system-ui, sans-serif; */
+  -webkit-tap-highlight-color: transparent;
 } 
 
 body {
   margin: 0;
-  background-color: var(--color-fondo);
-  font-family: "Inter", sans-serif;
+  background-color: var(--color-bg);
+  font-family: var(--font-main);
   font-optical-sizing: auto;
   font-weight: 400;
+  font-size: var(--text-sm);
   overflow-x: hidden;
 }
 
@@ -44,7 +76,16 @@ button,
 ===================================================== */
 
 h1 {
+  font-size: var(--text-xl);
   font-weight: 700;
+}
+
+h2 {
+  font-size: var(--text-lg);
+}
+
+.card h3 {
+  font-size: var(--text-md);
 }
 
 h3 {
@@ -68,8 +109,6 @@ button {
 }
 
 .contenedor {
-  font-size: 12px;
-  max-width: 1100px;
   margin: auto;
   padding: 16px;
 }
@@ -79,12 +118,12 @@ button {
 ===================================================== */
 
 .header {
-  background-color: var(--color-principal);
+  background-color: var(--color-primary);
   padding: 16px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  box-shadow: 0 2px 10px rgba(0,0,0,.05);
+  box-shadow: var(--shadow-soft);
 
   position: sticky;
   top: 0;
@@ -101,6 +140,8 @@ button {
 .contenedor-titulo-iconocarrito{
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px; /* 👈 SEPARA del buscador */
 }
 
 .contenedor_logo{
@@ -114,6 +155,22 @@ button {
   user-select: none;
 }
 
+.logo-text {
+  font-family: 'Inter', sans-serif;
+  font-weight: 800;
+  line-height: 1.2;
+  font-size: 22px;
+  color: white;
+  letter-spacing: -0.5px;
+  cursor: pointer;
+}
+
+.logo-text span {
+  color: #ffd166; /* color acento (podés cambiarlo) */
+  /* color: #00e0ff; estilo más tech */
+  /* color: #00c853; verde tipo delivery */
+}
+
 .carrito-btn {
   border: none;
   background: none;
@@ -121,6 +178,10 @@ button {
   cursor: pointer;
   position: relative;
   font-size: 22px;
+
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 #carritoCount {
@@ -144,7 +205,7 @@ button {
 ===================================================== */
 /* Buscador*/
 .buscador-container {
-
+  margin-top: 4px;
   /* Desabilitamos a la itsti no le gusta el bsucador todavia por la cantidad*/
   /* display: none; */
   position: relative;
@@ -165,13 +226,13 @@ button {
   padding: 0 20px;
   padding-left: 42px;
   font-size: 15px;
-  background: #f3f3f3;
+  background: var(--color-gray-light);
   transition: all .2s ease;
 }
 
 #buscador:focus {
   background: #fff;
-  box-shadow: 0 4px 12px rgba(0,0,0,.08);
+  box-shadow: var(--shadow-soft);
   outline: none;
 }
 
@@ -210,14 +271,15 @@ button {
 /* ================= CARRUSEL PRO ================= */
 .carousel-wrapper {
   width: 100%;
-  margin-top: 20px;
+  margin-top: 40px;
+  margin-bottom: 30px;
   padding: 0 20px; /* espacio lateral SOLO en móvil */
   box-sizing: border-box;
 }
 
 .carousel-container {
   width: 100%;
-  border-radius: 16px;
+  border-radius: var(--radius);
   overflow: hidden;
   position: relative;
 }
@@ -257,7 +319,7 @@ button {
 }
 
 .arrow:hover {
-  background: var(--color-principal);
+  background: var(--color-primary);
 }
 
 .left { left: 15px; }
@@ -281,7 +343,7 @@ button {
 }
 
 .dot.active {
-  background-color: var(--color-principal);
+  background-color: var(--color-primary);
 }
 
 /* =====================================================
@@ -296,8 +358,8 @@ button {
 
 .card {
   background: white;
-  border-radius: 16px;
-  box-shadow: 0 8px 18px rgba(0,0,0,.06);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
 
   display: flex;
   flex-direction: column;
@@ -309,7 +371,7 @@ button {
 
 .card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 26px rgba(0,0,0,.10);
+  box-shadow: var(--shadow-hover);
 }
 
 /*kisowea: Para que los títulos no desarmen visualmente la card:*/
@@ -319,7 +381,7 @@ button {
   -webkit-box-orient: vertical;
   overflow: hidden;
 
-  font-size: 15px;
+  font-size: var(--text-md);
   font-weight: 600;
   margin: 12px 0 6px;
 }
@@ -336,7 +398,7 @@ button {
 .precio {
   font-weight: 700;
   font-size: 17px;
-  color: #ED4C9B;
+  color: var(--color-primary);
   text-align: center;
   padding-bottom: 12px;
 }
@@ -352,7 +414,7 @@ button {
 /* evita sombra fea al restar cuando queda un producto*/
 
 .controles button {
-  border-radius: 8px;
+  border-radius: var(--radius);
   border: none;
   cursor: pointer;
 
@@ -387,17 +449,17 @@ button {
   font-size: 14px;
   white-space: nowrap;
 
-  background: #ED4C9B;
+  background: var(--color-primary);
   color: white;
-  border-radius: 10px;
+  border-radius: var(--radius);
 }
 
 .btn-principal {
   width: 100%;
   padding: 14px;
-  border-radius: 12px;
+  border-radius: var(--radius);
   border: none;
-  background: #111;
+  background: var(--color-black);
   color: white;
   cursor: pointer;
 }
@@ -426,7 +488,7 @@ button {
   background: white;
   width: 90%;
   max-width: 420px;
-  border-radius: 16px;
+  border-radius: var(--radius);
   padding: 16px;
 }
 
@@ -444,15 +506,15 @@ button {
   overflow: hidden;
   margin-bottom: 12px;
   background: white;
-  border-radius: 10px;
+  border-radius: var(--radius);
 }
 
 .item-contenido {
   position: relative;
   z-index: 2;
   background: white;
-  border-bottom: 2px solid var(--color-principal);
-  border-right: 4px solid var(--color-principal);
+  border-bottom: 2px solid var(--color-primary);
+  border-right: 4px solid var(--color-primary);
   transition: transform 0.3s ease;
   touch-action: pan-y;
 
@@ -521,7 +583,7 @@ button {
   width: 100%;
   padding: 10px;
   margin-top: 8px;
-  border-radius: 8px;
+  border-radius: var(--radius);
   border: 1px solid #ccc;
 }
 
@@ -554,7 +616,7 @@ input.error-input {
   color: white;
   border: none;
   padding: 8px;
-  border-radius: 8px;
+  border-radius: var(--radius);
 }
 
 .toast {
@@ -565,7 +627,7 @@ input.error-input {
   background: #111;
   color: white;
   padding: 10px 16px;
-  border-radius: 12px;
+  border-radius: var(--radius);
 }
 
 .carrito-btn.disabled {
@@ -588,7 +650,7 @@ input.error-input {
   padding: 14px 16px;
   gap: 12px;
   z-index: 200;
-  box-shadow: 0 -4px 12px rgba(0,0,0,.2);
+  box-shadow: var(--shadow-soft);
 
   transform: translateY(100%);
   transition: transform 0.3s ease;
@@ -735,15 +797,15 @@ input.error-input {
 
 @keyframes highlight {
   0% {
-    box-shadow: 0 0 0 rgba(0,0,0,0);
+    box-shadow: var(--shadow-soft);
     transform: scale(1);
   }
   50% {
-    box-shadow: 0 0 0 3px rgba(0,0,0,0.15);
+    box-shadow: var(--shadow-soft);
     transform: scale(1.02);
   }
   100% {
-    box-shadow: 0 8px 18px rgba(0,0,0,.06);
+    box-shadow: var(--shadow-soft);
     transform: scale(1);
   }
 }
@@ -772,7 +834,7 @@ input.error-input {
   transform-origin: center;
   opacity: 1;
 
-  box-shadow: 0 0 30px rgba(0,238,0,0.6);
+  box-shadow: var(--shadow-soft);
 }
 
 /* animación tipo ripple responsiva */
@@ -912,18 +974,18 @@ button.disabled {
 
 .card-categoria{
   background:white;
-  border-radius:20px;
+  border-radius: var(--radius);
   overflow:hidden;
   cursor:pointer;
 
-  box-shadow:0 10px 25px rgba(0,0,0,0.06);
+  box-shadow: var(--shadow-soft);
 
   transition:transform .2s ease, box-shadow .2s ease;
 }
 
 .card-categoria:hover{
   transform:translateY(-4px);
-  box-shadow:0 18px 40px rgba(0,0,0,0.12);
+  box-shadow: var(--shadow-hover);
 }
 
 .categoria-img{
@@ -988,14 +1050,14 @@ button.disabled {
 }
 
 .modal-confirm .modal-content {
-  border-radius: 20px;
+  border-radius: var(--radius);
   padding: 28px;
   max-width: 360px;
   width: 90%;
   text-align: center;
   position: relative;
 
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.18);
+  box-shadow: var(--shadow-soft);
 
   animation: modalEntradaPro 0.25s ease;
 }
@@ -1031,7 +1093,7 @@ button.disabled {
 .modal-confirm .acciones button {
   flex: 1;
   padding: 10px 0;
-  border-radius: 10px;
+  border-radius: var(--radius);
   font-weight: 600;
   border: none;
   cursor: pointer;
@@ -1124,7 +1186,7 @@ button.disabled {
 
 
   .slide img{
-    border-radius: 16px;
+    border-radius: var(--radius);
     transition: all 0.5s ease;
     opacity: 0.4;
     filter: blur(4px);
@@ -1135,7 +1197,7 @@ button.disabled {
     opacity: 1;
     filter: blur(0);
     transform: scale(1);
-    box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+    box-shadow: var(--shadow-soft);
   }
 
   .left,
@@ -1189,7 +1251,88 @@ button.disabled {
 }
 
 
+/* ===== DESTACADOS SCROLL ===== */
 
+h2{
+  margin: 20px;
+}
+
+.contenedor{
+  background: linear-gradient(135deg, #FFF8CC, #FFE066);
+  border-radius: 40px 150px 50px 0px;
+  /* background: transparent; */
+  box-shadow: var(--shadow-soft);
+  border: 1px solid rgba(0,0,0,0.03);
+  width: 100%;
+  max-width: 100%;
+}
+
+.contenedor h2{
+  margin: 0 0 12px 8px;
+}
+
+.destacados-scroll {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  padding: 10px 5px 20px;
+  scroll-snap-type: x mandatory;
+}
+
+.destacados-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Card horizontal */
+.destacados-scroll .card {
+  min-width: 180px;
+  max-width: 180px;
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+}
+
+.destacados-scroll .card{
+  background: #ffffffee;
+  backdrop-filter: blur(4px);
+}
+
+/* Un poquito más grandes en mobile */
+@media (max-width: 768px) {
+  .destacados-scroll .card {
+    min-width: 160px;
+  }
+}
+
+@media (min-width: 768px) {
+  .destacados-scroll {
+    gap: 100px;
+  }
+}
+
+.hero {
+  padding: 28px 16px 0px;
+  /* padding: 28px 10px 0px 0px; */
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: 26px;
+  font-weight: 800;
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+.hero p {
+  margin-top: 8px;
+  font-size: 14px;
+  color: #666;
+}
+
+/* palabra clave */
+.highlight {
+  color: #25D366;
+  font-weight: 700;
+}
 
 
 
