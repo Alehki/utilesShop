@@ -17,11 +17,17 @@
      <!-- <div  class="contenedor_logo">
          <img id="logoBtn" src="./assets/logo4.png" class="logo" alt="">
      </div> -->
-     <div class="logo-text" id="logoBtn">
-      Market<span>Go</span>
+    <div class="logo-text" id="logoBtn">
+      <span class="market">Market</span><span class="go">GO</span>
+      <!-- <p class="tagline">Tu súper en minutos</p> -->
     </div>
     <button id="btnCarrito" class="carrito-btn">
-      🛒 <span id="carritoCount">0</span>
+      <svg class="icon-cart" viewBox="0 0 24 24" fill="none">
+        <path d="M3 3h2l2.5 12h11l2-8H7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="10" cy="20" r="1.5" fill="currentColor"/>
+        <circle cx="18" cy="20" r="1.5" fill="currentColor"/>
+      </svg>
+      <span id="carritoCount">0</span>
     </button>
   </div>
 
@@ -31,19 +37,60 @@
 
 
   <div class="buscador-container">
-    <span class="icono-buscador">🔍</span>
-  <input 
+    <div class="lupa-container">
+      <svg class="icono-buscador" viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="7"></circle>
+        <line x1="20" y1="20" x2="16.5" y2="16.5"></line>
+      </svg>
+    </div>
+
+    <input 
       type="text" 
       id="buscador"
       placeholder="Buscar productos..."
     />
   </div>
 
+
 </header>
-<div class="hero">
-  <h1>Comprá fácil por <span class="highlight">WhatsApp</span></h1>
-  <p>Super, kiosco y más • te lo llevamos a tu casa en minutos</p>
+
+<div class="barra-beneficios">
+
+  <div class="beneficio">
+    <svg viewBox="0 0 24 24">
+      <path d="M3 12h13l3-3v6l-3-3H3z"></path>
+    </svg>
+    <p>Entrega en el momento</p>
+  </div>
+
+  <div class="beneficio">
+    <svg viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="9"></circle>
+      <line x1="12" y1="7" x2="12" y2="12"></line>
+      <line x1="12" y1="12" x2="15" y2="15"></line>
+    </svg>
+    <p>De 9 a 18 hs</p>
+  </div>
+
+  <div class="beneficio">
+    <svg viewBox="0 0 24 24">
+      <rect x="2" y="6" width="20" height="12" rx="2"></rect>
+      <line x1="2" y1="10" x2="22" y2="10"></line>
+    </svg>
+    <p>Hurlingham</p>
+  </div>
+
 </div>
+
+<div class="hero">
+  <div id="hero-badge" class="hero-badge">🟢 Abierto ahora · Entregas en el día</div>
+
+  <h1>Tu súper  <span class="highlight">en casa</span></h1>
+
+  <p>Recibí tu pedido en minutos</p>
+  <!-- <p>Hurlingham, Morris y Villa Tesei</p> -->
+</div>
+
 <section id="carouselSection" class="carousel-wrapper">
   <div class="carousel-container">
     <div class="carousel-track">
@@ -51,8 +98,13 @@
       <div class="slide">
         <picture>
           <source srcset="assets/banner3-desktop.webp" media="(max-width: 768px)">
-          <img src="assets/banner3-desktop.webp" alt="Ofertas especiales">
+          <img src="assets/banner3-desktop.webp" alt="">
         </picture>
+
+        <div class="slide-content">
+          <h3>Recibí tu pedido en 10–25 min</h3>
+          <p>En Hurlingham, Morris y Villa Tesei</p>
+        </div>
       </div>
 
       <div class="slide">
@@ -60,6 +112,12 @@
           <source srcset="assets/banner2-desktop.webp" media="(max-width: 768px)">
           <img src="assets/banner2-desktop.webp" alt="Envíos rápidos">
         </picture>
+        <div class="slide-content slide-content-2">
+          <span class="badge">Primera compra</span>
+
+          <h3>Envío gratis</h3>
+          <p>+ peluche de regalo</p>
+        </div>
       </div>
 
       <div class="slide">
@@ -67,6 +125,12 @@
           <source srcset="assets/banner1-desktop.webp" media="(max-width: 768px)">
           <img src="assets/banner1-desktop.webp" alt="Sorteos especiales">
         </picture>
+        <div class="slide-content slide-content-3">
+          <span class="badge">📍 Tu zona</span>
+
+          <h3>Estamos cerca tuyo</h3>
+          <p>Hurlingham, Morris y Villa Tesei</p>
+        </div>
       </div>
 
     </div>
@@ -97,6 +161,24 @@
 
     <div id="carrito-items" class="carrito-items"></div>
 
+    <div id="resumenCarrito" class="resumen-carrito"></div>
+
+    <p id="mensajeCompraMinima" class="mensaje-minimo"></p>
+    <div class="total">
+      SubTotal: $<span id="total">0</span>
+    </div>
+    <!-- <p id="mensajeHorario" class="mensaje-minimo hidden"></p> -->
+    <button id="revisarPedido" class="btn-principal" disabled>Ir a pagar</button>
+  </div>
+</div>
+
+<!-- MODAL RESUMEN -->
+<div id="modalResumen" class="modal hidden">
+  <div class="modal-content">
+    <button id="volverCarrito" class="btn-volver-resumen">←</button>
+    <button class="cerrar" id="cerrarResumen">✕</button>
+    <h2 class="titulo-resumen">Resumen del pedido</h2>
+
     <div class="form-envio">
       <input id="direccion" placeholder="Dirección (obligatoria)">
       <small id="errorDireccion" class="error hidden">
@@ -115,23 +197,9 @@
           Elegí un método de pago
         </small>
       </div>
-
     </div>
-    <p id="mensajeCompraMinima" class="mensaje-minimo"></p>
-    <div class="total">
-      Total: $<span id="total">0</span>
-    </div>
-    <!-- <p id="mensajeHorario" class="mensaje-minimo hidden"></p> -->
-    <button id="revisarPedido" class="btn-principal" disabled>Revisar pedido</button>
-  </div>
-</div>
 
-<!-- MODAL RESUMEN -->
-<div id="modalResumen" class="modal hidden">
-  <div class="modal-content">
-    <button class="cerrar" id="cerrarResumen">✕</button>
-    <h2>Resumen del pedido</h2>
-    <pre id="resumenPedido"></pre>
+    <div id="resumenPedido"></div>
     <button id="enviarWhatsapp" class="btn-principal">Enviar por WhatsApp</button>
   </div>
 </div>
@@ -207,7 +275,7 @@
     <div id="productoCantidad" class="cantidad-controles hidden">
       <button id="productoMenos">−</button>
       <span id="productoCantidadValor">1</span>
-      <button id="productoMas">+</button>
+      <button id="productoMas" class="btn-icon primary">+</button>
     </div>
   </div>
 
@@ -217,7 +285,7 @@
 
 <div id="pedidoOverlay" class="pedido-overlay hidden">
   <div class="pedido-bolita"></div>
-  <div class="pedido-texto">Pedido listo para enviar</div>
+  <div class="pedido-texto">Enviado</div>
   <audio id="pedidoSound" src="sound/confirm.mp3" preload="auto"></audio>
 </div>
 

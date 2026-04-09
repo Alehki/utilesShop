@@ -37,6 +37,22 @@
   --text-md: 16px;
   --text-lg: 20px;
   --text-xl: 26px;
+
+  /* NUEVOS COLORES DE IMPLEMENTACION
+  
+    Regla:
+
+    Amarillo → acción (botones, detalles)
+    Negro → estructura
+    Blanco → fondo
+  
+  */
+  --amarillo-principal: #facc15;   /* principal (botones, GO) */
+  --amarillo-hover: #eab308;       /* hover */
+  --amarillo-suave: #fef3c7;       /* fondos suaves */
+  --negro: #111827;                /* texto fuerte */
+  --gris: #6b7280;                 /* texto secundario */
+  --blanco: #ffffff;
 }
 
 /* =====================================================
@@ -118,7 +134,7 @@ button {
 ===================================================== */
 
 .header {
-  background-color: var(--color-primary);
+  background-color: var(--blanco);
   padding: 16px;
   display: flex;
   flex-direction: column;
@@ -156,20 +172,28 @@ button {
 }
 
 .logo-text {
+  display: flex;
+  align-items: center;
   font-family: 'Inter', sans-serif;
   font-weight: 800;
-  line-height: 1.2;
-  font-size: 22px;
-  color: white;
-  letter-spacing: -0.5px;
-  cursor: pointer;
+  font-size: 28px;
+  letter-spacing: -0.8px;
 }
 
-.logo-text span {
-  color: #ffd166; /* color acento (podés cambiarlo) */
-  /* color: #00e0ff; estilo más tech */
-  /* color: #00c853; verde tipo delivery */
+.logo-text .market {
+  color: var(--negro);
+  font-weight: 700;
 }
+
+.logo-text .go {
+  color: var(--amarillo-principal);
+  font-weight: 900;
+  letter-spacing: -1px;
+}
+
+/* .tagline{
+  font-size: 8px;
+} */
 
 .carrito-btn {
   border: none;
@@ -184,21 +208,68 @@ button {
   gap: 4px;
 }
 
-#carritoCount {
-  position: absolute;
-  top: -6px;
-  right: -8px;
-  background: #111;
-  color: white;
-  font-size: 12px;
-  min-width: 18px;
-  height: 18px;
-  border-radius: 50%;
+.carrito-btn {
+  position: relative;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  line-height: 1;
+
+  padding: 6px;
 }
+
+.icon-cart {
+  width: 24px;
+  height: 24px;
+  color: var(--negro);
+  opacity: 0.9;
+
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.carrito-btn:hover .icon-cart {
+  transform: scale(1.1);
+  opacity: 1;
+}
+
+@keyframes pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  50% { transform: translateX(2px); }
+  75% { transform: translateX(-2px); }
+  100% { transform: translateX(0); }
+}
+
+.pop {
+  animation: pop 0.3s ease;
+}
+
+.shake {
+  animation: shake 0.3s ease;
+}
+
+#carritoCount {
+  position: absolute;
+  top: -5px;
+  right: -6px;
+  background: var(--amarillo-principal);
+  color: black;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 3px 6px;
+  border-radius: 999px;
+}
+
+
 
 /* =====================================================
    5. BUSCADOR
@@ -224,26 +295,110 @@ button {
   border-radius: 999px;
   border: none;
   padding: 0 20px;
-  padding-left: 42px;
+  padding-left: 16px;
+  padding-right: 40px;
   font-size: 15px;
-  background: var(--color-gray-light);
+  /* background: var(--amarillo-suave); */
+  border: 1px solid transparent;
+  border: 2px solid rgb(0, 0, 0);
   transition: all .2s ease;
 }
 
-#buscador:focus {
-  background: #fff;
-  box-shadow: var(--shadow-soft);
-  outline: none;
+.lupa-container{
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 30px;
+  height: 30px;
+  pointer-events: none;
+
+  background-color: var(--amarillo-principal);
+  border-radius: 50%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .icono-buscador {
   position: absolute;
   top: 50%;
-  left: 16px;
   transform: translateY(-50%);
-  opacity: 0.5;
-  font-size: 14px;
+  width: 18px;
+  height: 18px;
   pointer-events: none;
+  border-radius: 50%;
+}
+
+.icono-buscador svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* líneas */
+.icono-buscador circle,
+.icono-buscador line {
+  stroke: black;
+  stroke-width: 2.5;
+  fill: none;
+  transition: stroke 0.2s ease;
+}
+
+#buscador:focus + .icono-buscador,
+.buscador-container:focus-within .icono-buscador circle,
+.buscador-container:focus-within .icono-buscador line {
+  stroke: var(--amarillo-principal);
+}
+
+.barra-beneficios {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  background: var(--amarillo-suave);
+  padding: 8px 10px;
+  border-radius: 10px;
+}
+
+.beneficio p {
+  margin: 0;
+  line-height: 1;
+}
+
+.beneficio {
+  /* flex: 1; 👈 todos ocupan lo mismo */
+  
+  display: flex;
+  align-items: center;
+  /* justify-content: center; */
+
+  font-size: 10px; 
+  color: #374151;
+  font-weight: 600;
+}
+
+.beneficio span {
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+}
+
+.beneficio svg {
+  width: 16px;
+  height: 16px;
+  stroke-width: 1.8;
+  fill: none;
+  padding-right: 4px;
+
+  flex-shrink: 0;
+  stroke: var(--amarillo-principal);
+}
+
+.beneficio:not(:last-child) {
+  border-right: 1px solid rgba(0,0,0,0.06);
 }
 
 .sin-resultados {
@@ -271,7 +426,7 @@ button {
 /* ================= CARRUSEL PRO ================= */
 .carousel-wrapper {
   width: 100%;
-  margin-top: 40px;
+  margin-top: 20px;
   margin-bottom: 30px;
   padding: 0 20px; /* espacio lateral SOLO en móvil */
   box-sizing: border-box;
@@ -294,13 +449,74 @@ button {
 .slide {
   flex: 0 0 100%;
   height: 450px;
+  height: 220px;
   position: relative;
+  /* box-shadow: 0 10px 25px rgba(0,0,0,0.15); */
 }
 
+.slide picture,
 .slide img {
   width: 100%;
   height: 100%;
+  display: block;
   object-fit: cover;
+}
+
+/* .slide img {
+  filter: brightness(0.7) blur(1px);
+} */
+
+/* .slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+} */
+
+.slide::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0,0,0,0.65),
+    rgba(0,0,0,0.15)
+  );
+}
+
+.slide-content {
+  position: absolute;
+  bottom: 18px;
+  left: 18px;
+  right: 18px;
+  color: white;
+  z-index: 2;
+}
+
+.slide-content-2, .slide-content-3{
+  top: 40px;
+}
+
+.slide-content h3 {
+  font-size: 18px;
+  font-weight: 800;
+  margin: 0;
+}
+
+.slide-content p {
+  font-size: 13px;
+  margin-top: 4px;
+  opacity: 0.9;
+}
+
+.badge {
+  display: inline-block;
+  background: #fff;
+  color: #111;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 999px;
+  margin-bottom: 6px;
 }
 
 /* Flechas */
@@ -332,8 +548,9 @@ button {
 }
 
 .dot {
-  height: 10px;
-  width: 10px;
+  width: 8px;
+  height: 8px;
+  opacity: 0.5;
   margin: 5px;
   background-color: #ccc;
   border-radius: 50%;
@@ -343,7 +560,10 @@ button {
 }
 
 .dot.active {
-  background-color: var(--color-primary);
+  width: 10px;
+  height: 10px;
+  opacity: 1;
+  background-color: var(--amarillo-hover);
 }
 
 /* =====================================================
@@ -397,8 +617,9 @@ button {
 
 .precio {
   font-weight: 700;
-  font-size: 17px;
-  color: var(--color-primary);
+  font-size: 18px;
+  letter-spacing: -0.3px;
+  color: var(--negro);
   text-align: center;
   padding-bottom: 12px;
 }
@@ -407,7 +628,7 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 10px;
   margin-top: auto;
 }
 
@@ -448,9 +669,8 @@ button {
   padding: 9px 16px;
   font-size: 14px;
   white-space: nowrap;
-
-  background: var(--color-primary);
-  color: white;
+  background: var(--amarillo-principal);
+  color: black;
   border-radius: var(--radius);
 }
 
@@ -467,8 +687,9 @@ button {
 .controles span {
   min-width: 20px;
   text-align: center;
+  font-weight: 600;
+  font-size: 14px;
 }
-
 
 /* =====================================================
    8. CARRITO
@@ -513,8 +734,8 @@ button {
   position: relative;
   z-index: 2;
   background: white;
-  border-bottom: 2px solid var(--color-primary);
-  border-right: 4px solid var(--color-primary);
+  border-bottom: 2px solid var(--amarillo-suave);
+  border-right: 4px solid var(--amarillo-suave);
   transition: transform 0.3s ease;
   touch-action: pan-y;
 
@@ -529,8 +750,8 @@ button {
   position: absolute;
   right: 0;
   top: 0;
-  height: 100%;
   width: 70px;
+  height: 100%;
   background: #d84848;
   display: flex;
   align-items: center;
@@ -549,6 +770,72 @@ button {
   display: flex;
   gap: 10px;
 }
+
+/**/
+
+.btn-volver-resumen {
+  position: relative;
+  bottom: 8px;
+  right: 6px;
+  background: none;
+  border: none;
+  font-size: 30px;
+  cursor: pointer;
+}
+
+.titulo-resumen{
+  margin: 0;
+  padding: 8px;
+}
+
+.resumen-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+/* productos */
+.resumen-productos {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px;
+}
+
+.resumen-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+}
+
+/* tarjeta de totales */
+.resumen-card {
+  background: #f7f7f7;
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+/* filas */
+.fila {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+}
+
+/* total final */
+.total-final {
+  border-top: 1px solid #ddd;
+  padding-top: 8px;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+/**/
 
 .modal-confirm {
   z-index: 50000 !important;
@@ -573,11 +860,11 @@ button {
   padding-bottom: 8px;
 }
 
-.trash {
+/* .trash {
   background: none;
   border: none;
   cursor: pointer;
-}
+} */
 
 .form-envio input {
   width: 100%;
@@ -642,8 +929,8 @@ input.error-input {
   bottom: 0;
   left: 0;
   width: 100%;
-  background: #000;
-  color: #fff;
+  background: var(--negro);
+  color: var(--blanco);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -672,14 +959,15 @@ input.error-input {
 }
 
 .mobile-cart button {
-  background: #fff;
-  color: #000;
-  font-weight: 600;
   border: none;
   border-radius: 999px;
   padding: 12px 18px;
   font-size: 14px;
   cursor: pointer;
+
+  background: var(--amarillo-principal);
+  color: black;
+  font-weight: 700;
 }
 
 /* =====================================================
@@ -1310,31 +1598,94 @@ h2{
 }
 
 .hero {
-  padding: 28px 16px 0px;
-  /* padding: 28px 10px 0px 0px; */
+  /* padding: 32px 16px 8px; */
+  padding: 24px 16px 8px;
   text-align: center;
 }
 
 .hero h1 {
-  font-size: 26px;
+  font-size: 28px; /* un poquito más grande */
   font-weight: 800;
   margin: 0;
   letter-spacing: -0.5px;
 }
 
 .hero p {
-  margin-top: 8px;
-  font-size: 14px;
+  /* margin-top: 10px; */
+  margin: 5px;
+  /* font-size: 14px; */
+  font-size: 12px;
   color: #666;
+  max-width: 280px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-/* palabra clave */
 .highlight {
-  color: #25D366;
-  font-weight: 700;
+  color: var(--amarillo-principal);
+  font-weight: 800;
 }
 
+.hero-badge {
+  display: inline-block;
+  background: #e6f7ea;
+  color: #1f7a3a;
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
 
+/**/
 
+.btn-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  background: var(--color-gray-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 
+  transition: all 0.2s ease;
+}
 
+/* .btn-icon.item-eliminar{
+  width: 60px;
+  height: 60px;
+  border-radius: none;
+} */
+
+.btn-icon svg {
+  width: 16px;
+  height: 16px;
+  stroke: var(--negro);
+  stroke-width: 2;
+  fill: none;
+}
+
+/* hover */
+.btn-icon:hover {
+  background: var(--amarillo-suave);
+}
+
+/* botón sumar (destacado) */
+.btn-icon.primary {
+  background: var(--amarillo-principal);
+}
+
+.btn-icon.primary svg {
+  stroke: var(--negro);
+}
+
+/* eliminar */
+.btn-icon.danger {
+  background: #fee2e2;
+}
+
+.btn-icon.danger svg {
+  stroke: #dc2626;
+}
