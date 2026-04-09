@@ -560,27 +560,37 @@ document.addEventListener("DOMContentLoaded", () => {
   const prevBtn = document.querySelector(".left");
   const dotsContainer = document.querySelector(".dots");
 
-  // let index = 0;
   const totalSlides = slides.length;
 
+  /* =========================
+    CLONAR (INFINITO REAL)
+  ========================= */
   const firstClone = slides[0].cloneNode(true);
   const lastClone = slides[slides.length - 1].cloneNode(true);
+  let isAnimating = false;
 
   track.appendChild(firstClone);
   track.insertBefore(lastClone, slides[0]);
 
   const allSlides = document.querySelectorAll(".slide");
-  let index = 1; // arrancamos en 1 (porque agregamos clon adelante)
+
+  let index = 1;
 
   track.style.transform = `translateX(-${index * 100}%)`;
 
   /* =========================
-    POSICIONAR SLIDES
+    FUNCIONES
   ========================= */
-  // function updateCarousel() {
-  //   track.style.transform = `translateX(-${index * 100}%)`;
-  //   updateDots();
-  // }
+  function updateCarousel() {
+    if (isAnimating) return;
+
+    isAnimating = true;
+
+    track.style.transition = "transform 0.5s ease-in-out";
+    track.style.transform = `translateX(-${index * 100}%)`;
+
+    updateDots();
+  }
   function updateDots() {
     dots.forEach(dot => dot.classList.remove("active"));
 
@@ -592,36 +602,7 @@ document.addEventListener("DOMContentLoaded", () => {
     dots[realIndex].classList.add("active");
   }
 
-  function updateCarousel() {
-    track.style.transition = "transform 0.5s ease-in-out";
-    track.style.transform = `translateX(-${index * 100}%)`;
-    updateDots();
-  }
-
-  /* =========================
-    BOTONES
-  ========================= */
-  // nextBtn.addEventListener("click", () => {
-  //   index = (index + 1) % totalSlides;
-  //   updateCarousel();
-  // });
-
-  // prevBtn.addEventListener("click", () => {
-  //   index = (index - 1 + totalSlides) % totalSlides;
-  //   updateCarousel();
-  // });
-  nextBtn.addEventListener("click", () => {
-    index++;
-    updateCarousel();
-    resetAutoplay();
-  });
-
-  prevBtn.addEventListener("click", () => {
-    index--;
-    updateCarousel();
-    resetAutoplay();
-  });
-
+  /*DOTS*/
   dotsContainer.innerHTML = "";
 
   for (let i = 0; i < totalSlides; i++) {
@@ -631,8 +612,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (i === 0) dot.classList.add("active");
 
     dot.addEventListener("click", () => {
-      index = i;
+      index = i + 1; // 🔥 IMPORTANTE (por los clones)
       updateCarousel();
+      resetAutoplay();
     });
 
     dotsContainer.appendChild(dot);
@@ -640,45 +622,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const dots = document.querySelectorAll(".dot");
 
-  let autoplay = setInterval(() => {
+  /* BOTONES */
+  nextBtn.addEventListener("click", () => {
+    if (isAnimating) return;
     index++;
-    updateCarousel();
-  }, 4000);
-
-  let startX = 0;
-
-  track.addEventListener("touchstart", e => {
-    startX = e.touches[0].clientX;
-  });
-
-  track.addEventListener("touchend", e => {
-    const endX = e.changedTouches[0].clientX;
-
-    if (startX - endX > 50) {
-      index++;
-    }
-
-    if (endX - startX > 50) {
-      index--;
-    }
-
     updateCarousel();
     resetAutoplay();
   });
 
-  track.addEventListener("transitionend", () => {
-    if (allSlides[index].isSameNode(firstClone)) {
-      track.style.transition = "none";
-      index = 1;
-      track.style.transform = `translateX(-${index * 100}%)`;
-    }
-
-    if (allSlides[index].isSameNode(lastClone)) {
-      track.style.transition = "none";
-      index = allSlides.length - 2;
-      track.style.transform = `translateX(-${index * 100}%)`;
-    }
+  prevBtn.addEventListener("click", () => {
+    if (isAnimating) return;
+    index--;
+    updateCarousel();
+    resetAutoplay();
   });
+
+  /* AUTOPLAY */
+  let autoplay = setInterval(() => {
+    if (!isAnimating) {
+      index++;
+      updateCarousel();
+    }
+  }, 4000);
 
   function resetAutoplay() {
     clearInterval(autoplay);
@@ -688,10 +653,52 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 4000);
   }
 
-  nextBtn.addEventListener("click", resetAutoplay);
-  prevBtn.addEventListener("click", resetAutoplay);
+  /* SWIPE */
+  let startX = 0;
 
-  track.addEventListener("click", resetAutoplay);
+  track.addEventListener("touchstart", e => {
+    startX = e.touches[0].clientX;
+  });
+
+  track.addEventListener("touchend", e => {
+    const endX = e.changedTouches[0].clientX;
+
+    if (startX - endX > 50) index++;
+    if (endX - startX > 50) index--;
+
+    updateCarousel();
+    resetAutoplay();
+  });
+
+  /* LOOP INFINITO */
+  track.addEventListener("transitionend", () => {
+    const currentSlide = allSlides[index];
+
+    if (!currentSlide) {
+      track.style.transition = "none";
+      index = 1;
+      track.style.transform = `translateX(-${index * 100}%)`;
+      updateDots(); // 🔥 agregar acá
+      isAnimating = false;
+      return;
+    }
+
+    if (currentSlide === firstClone) {
+      track.style.transition = "none";
+      index = 1;
+      track.style.transform = `translateX(-${index * 100}%)`;
+      updateDots(); // 🔥 clave
+    }
+
+    if (currentSlide === lastClone) {
+      track.style.transition = "none";
+      index = allSlides.length - 2;
+      track.style.transform = `translateX(-${index * 100}%)`;
+      updateDots(); // 🔥 clave
+    }
+
+    isAnimating = false;
+  });
 
   /* */
 
