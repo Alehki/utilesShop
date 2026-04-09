@@ -109,8 +109,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     main.innerHTML = `
       <div class="header-categoria">
-        <button class="btn-volver">← Volver</button>
-        <h2 class="titulo-seccion">${categoria}</h2>
+        <button class="btn-volver">←</button>
+        <h2>${categoria.charAt(0).toUpperCase() + categoria.slice(1)}</h2>
       </div>
       <div id="contenedorProductos" class="productos"></div>
     `;
@@ -249,12 +249,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const carousel = document.getElementById("carouselSection");
     const hero = document.querySelector(".hero");
     const destacados = document.querySelector(".seccion-destacados");
+    const barraBeneficios = document.querySelector(".barra-beneficios");
 
     if (vistaActual === "categorias") {
 
       carousel?.classList.remove("hidden");
       hero?.classList.remove("hidden");
       destacados?.classList.remove("hidden");
+      barraBeneficios?.classList.remove("hidden");
 
       renderCategorias();
       renderDestacados(TODOS_LOS_PRODUCTOS, carrito, vistaActual);
@@ -264,6 +266,7 @@ document.addEventListener("DOMContentLoaded", () => {
       carousel?.classList.add("hidden");
       hero?.classList.add("hidden");
       destacados?.classList.add("hidden");
+      barraBeneficios?.classList.add("hidden");
 
       renderProductosCategoria(categoriaActiva);
     }
@@ -655,19 +658,63 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* SWIPE */
   let startX = 0;
+  let isSwiping = false;
+
+  // function hayModalAbierto() {
+  //   return document.querySelector(".modal:not(.hidden)");
+  // }
 
   track.addEventListener("touchstart", e => {
+    if (isAnimating) return; // 🚫 no permitir swipe en animación
+
     startX = e.touches[0].clientX;
+    isSwiping = true;
+  });
+
+  track.addEventListener("touchmove", e => {
+    if (!isSwiping) return;
+
+    const currentX = e.touches[0].clientX;
+    const diff = Math.abs(startX - currentX);
+
+    // 👉 si el movimiento es muy chico, ignoramos
+    if (diff < 10) return;
+
+    // 👉 si ya empezó un swipe real, bloqueamos múltiples direcciones
+    isSwiping = true;
   });
 
   track.addEventListener("touchend", e => {
-    const endX = e.changedTouches[0].clientX;
+    if (!isSwiping) return;
 
-    if (startX - endX > 50) index++;
-    if (endX - startX > 50) index--;
+    const endX = e.changedTouches[0].clientX;
+    const diff = startX - endX;
+
+    if (Math.abs(diff) < 50) {
+      isSwiping = false;
+
+      // 🔥 FORZAMOS QUE NO QUEDE “medio estado”
+      track.style.transition = "transform 0.2s ease-out";
+      track.style.transform = `translateX(-${index * 100}%)`;
+
+      return;
+    }
+
+    if (isAnimating) {
+      isSwiping = false;
+      return;
+    }
+
+    if (diff > 0) {
+      index++;
+    } else {
+      index--;
+    }
 
     updateCarousel();
     resetAutoplay();
+
+    isSwiping = false;
   });
 
   /* LOOP INFINITO */
@@ -1392,15 +1439,34 @@ document.addEventListener("DOMContentLoaded", () => {
     actualizarAccionesProducto();
   };
 
+  function manejarSwipe() {
+    const diff = endX - startXX;
 
+    if (Math.abs(diff) < 50) return;
+
+    let nuevoIndex;
+
+    if (diff < 0) {
+      // swipe izquierda → siguiente
+      nuevoIndex =
+        (imagenActual + 1) % productoActivo.imagenes.length;
+    } else {
+      // swipe derecha → anterior
+      nuevoIndex =
+        (imagenActual - 1 + productoActivo.imagenes.length) %
+        productoActivo.imagenes.length;
+    }
+
+    cambiarImagen(nuevoIndex);
+  }
 
   /* modale nueva de click card */
-  // let startX = 0;
+  // let startXX = 0;
   // let endX = 0;
 
   // if (galeria) {
   //   galeria.addEventListener("touchstart", e => {
-  //     startX = e.touches[0].clientX;
+  //     startXX = e.touches[0].clientX;
   //   });
 
   //   galeria.addEventListener("touchend", e => {
@@ -1408,6 +1474,25 @@ document.addEventListener("DOMContentLoaded", () => {
   //     manejarSwipe();
   //   });
   // }
+
+  let startXX = null;
+  let endX = null;
+
+  if (galeria) {
+    galeria.addEventListener("touchstart", e => {
+      startXX = e.touches[0].clientX;
+    });
+
+    galeria.addEventListener("touchend", e => {
+      if (startXX === null) return;
+
+      endX = e.changedTouches[0].clientX;
+      manejarSwipe();
+
+      startXX = null;
+      endX = null;
+    });
+  }
 
 
   if (btnElegirColores) {

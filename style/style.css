@@ -347,12 +347,6 @@ button {
   transition: stroke 0.2s ease;
 }
 
-#buscador:focus + .icono-buscador,
-.buscador-container:focus-within .icono-buscador circle,
-.buscador-container:focus-within .icono-buscador line {
-  stroke: var(--amarillo-principal);
-}
-
 .barra-beneficios {
   display: flex;
   justify-content: space-between;
@@ -1312,7 +1306,7 @@ button.disabled {
   opacity:0.5;
 }
 
-.header-categoria {
+/* .header-categoria {
   display: flex;
   align-items: center;
   gap: 15px;
@@ -1323,6 +1317,31 @@ button.disabled {
   background: none;
   border: none;
   font-size: 22px;
+  cursor: pointer;
+} */
+
+.header-categoria {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  margin-bottom: 10px;
+}
+
+.header-categoria h2 {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.btn-volver {
+  background: none;
+  position: relative;
+  bottom: 5px;
+  right: 10px;
+  border: none;
+  font-size: 22px;
+  font-size: 30px;
   cursor: pointer;
 }
 
