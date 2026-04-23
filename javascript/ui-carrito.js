@@ -15,15 +15,19 @@ export function renderCarrito({
   activarSwipeCarrito,
   pedirEliminar,
   agregarDesdeCarrito,
-  restarDesdeCarrito
+  restarDesdeCarrito,
+  resumenDiv,
+  msgMinimo,
+  msgHorario,
+  obtenerEstadoPedido
 }) {
   const carrito = getCarrito();
   carritoItems.innerHTML = "";
 
   if (Object.keys(carrito).length === 0) {
     totalSpan.textContent = 0;
-    modalCarrito.classList.add("hidden");
-    actualizarCount();
+    // modalCarrito.classList.add("hidden");
+    // actualizarCount();
     return;
   }
 
@@ -110,7 +114,6 @@ export function renderCarrito({
 
   // RESUMEN DEL CARRITO
 
-  const resumenDiv = document.getElementById("resumenCarrito");
   const cantidadTotal = Object.values(carrito)
     .reduce((acc, p) => acc + p.cantidad, 0);
 
@@ -121,16 +124,15 @@ export function renderCarrito({
     </div>
   `;
 
-  const msgMinimo = document.getElementById("mensajeCompraMinima");
-  const msgHorario = document.getElementById("mensajeHorario");
+  const estado = obtenerEstadoPedido(total);
 
-  if (!estaAbierto()) {
+  if (estado === "cerrado") {
     msgHorario.textContent =
       `Estamos cerrados 🕒 Horario: ${HORARIO_APERTURA}:00 a ${HORARIO_CIERRE}:00 hs`;
     msgHorario.classList.remove("hidden");
     msgMinimo.classList.add("hidden");
 
-  } else if (total < COMPRA_MINIMA) {
+  } else if (estado === "minimo") {
     const falta = COMPRA_MINIMA - total;
     msgMinimo.textContent = `Agregá $${falta} para poder pedir`;
     msgMinimo.classList.add("show");

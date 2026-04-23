@@ -9,13 +9,13 @@ import { renderCarrito, abrirCarrito, cerrarCarrito } from "./ui-carrito.js";
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  window.pedirEliminar = function(key) {
+  function pedirEliminar (key) {
     idEliminar = key;
     document.getElementById("modalEliminar").classList.remove("hidden");
     actualizarScrollGlobal();
   };
 
-  window.agregarDesdeCarrito = function(key) {
+  function agregarDesdeCarrito (key) {
     const item = carrito[key];
     if (!item) return;
 
@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
     renderCarrito(contextoCarrito);
   };
 
-  window.restarDesdeCarrito = function(key) {
+  function restarDesdeCarrito(key) {
     const item = carrito[key];
     if (!item) return;
 
@@ -214,7 +214,11 @@ document.addEventListener("DOMContentLoaded", () => {
     activarSwipeCarrito,
     pedirEliminar,
     agregarDesdeCarrito,
-    restarDesdeCarrito
+    restarDesdeCarrito,
+    resumenDiv: document.getElementById("resumenCarrito"),
+    msgMinimo: document.getElementById("mensajeCompraMinima"),
+    msgHorario: document.getElementById("mensajeHorario"),
+    obtenerEstadoPedido
   };
 
   /* UTILS */
@@ -227,11 +231,21 @@ document.addEventListener("DOMContentLoaded", () => {
   function guardar() {
     guardarCarrito(carrito);
 
-    actualizarCount();       // carrito arriba
-    renderCarrito(contextoCarrito);
+    const carritoVacio = Object.keys(carrito).length === 0;
+
+    if (carritoVacio) {
+      cerrarCarrito({
+        modalCarrito,
+        habilitarScroll,
+        actualizarCount
+      });
+    } else {
+      renderCarrito(contextoCarrito);
+      actualizarCount();
+    }
 
     if (vistaActual === "productos") {
-      renderProductosCategoria(categoriaActiva); // cards
+      renderProductosCategoria(categoriaActiva);
     }
 
     if (vistaActual === "categorias") {
@@ -331,21 +345,21 @@ document.addEventListener("DOMContentLoaded", () => {
     carritoCount.classList.add("pop");
   }
 
+  /* BARRA BOTON NAV */
+
   let cantidadAnterior = 0;
 
-  function actualizarCount() {
-    const { cantidad, total } = obtenerResumenCarrito(carrito);
-
-    carritoCount.textContent = cantidad;
-
-    if (cantidad < cantidadAnterior) {
+  function animarCambioCantidad(nuevaCantidad) {
+    if (nuevaCantidad < cantidadAnterior) {
       carritoCount.classList.remove("shake");
       void carritoCount.offsetWidth;
       carritoCount.classList.add("shake");
     }
 
-    cantidadAnterior = cantidad;
+    cantidadAnterior = nuevaCantidad;
+  }
 
+  function actualizarBarraCarritoUI(cantidad, total) {
     const carritoAbierto = !modalCarrito.classList.contains("hidden");
 
     if (cantidad > 0 && !carritoAbierto) {
@@ -356,6 +370,15 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       mobileCartBar.classList.remove("show");
     }
+  }
+
+  function actualizarCount() {
+    const { cantidad, total } = obtenerResumenCarrito(carrito);
+
+    carritoCount.textContent = cantidad;
+
+    animarCambioCantidad(cantidad);
+    actualizarBarraCarritoUI(cantidad, total);
 
     const btnCarrito = document.getElementById("btnCarrito");
     btnCarrito.classList.toggle("disabled", cantidad === 0);
@@ -527,31 +550,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-  function actualizarCardProducto(id) {
-  const card = document.getElementById(`producto-${id}`);
-  if (!card) return;
+  // function actualizarCardProducto(id) {
+  //   const card = document.getElementById(`producto-${id}`);
+  //   if (!card) return;
 
-  const p = TODOS_LOS_PRODUCTOS.find(prod => prod.id === id);
-  if (!p) return;
-  const cant = Object.values(carrito)
-    .filter(item => item.id === id)
-    .reduce((acc, item) => acc + item.cantidad, 0);
+  //   const p = TODOS_LOS_PRODUCTOS.find(prod => prod.id === id);
+  //   if (!p) return;
+  //   const cant = Object.values(carrito)
+  //     .filter(item => item.id === id)
+  //     .reduce((acc, item) => acc + item.cantidad, 0);
 
-  const controles = `
-    ${
-      cant === 0
-        ? `<button onclick="event.stopPropagation(); agregarDesdeCard(${id})">Agregar</button>`
-        : `
-          <button onclick="event.stopPropagation(); restar(${id})">−</button>
-          <span>${cant}</span>
-          <button onclick="event.stopPropagation(); agregarDesdeCard(${id})">+</button>
-        `
-    }
-  `;
+  //   const controles = `
+  //     ${
+  //       cant === 0
+  //         ? `<button onclick="event.stopPropagation(); agregarDesdeCard(${id})">Agregar</button>`
+  //         : `
+  //           <button onclick="event.stopPropagation(); restar(${id})">−</button>
+  //           <span>${cant}</span>
+  //           <button onclick="event.stopPropagation(); agregarDesdeCard(${id})">+</button>
+  //         `
+  //     }
+  //   `;
 
-  const controlesDiv = card.querySelector(".controles");
-  controlesDiv.innerHTML = controles;
-}
+  //   const controlesDiv = card.querySelector(".controles");
+  //   controlesDiv.innerHTML = controles;
+  // }
 
 
   /*  */
@@ -764,6 +787,12 @@ document.addEventListener("DOMContentLoaded", () => {
     // if (!metodoPago) return false;
 
     return true;
+  }
+
+  function obtenerEstadoPedido(total) {
+    if (!estaAbierto()) return "cerrado";
+    if (total < COMPRA_MINIMA) return "minimo";
+    return "ok";
   }
 
   function actualizarBotonRevisar() {
@@ -1095,7 +1124,7 @@ document.addEventListener("DOMContentLoaded", () => {
     delete carrito[idEliminar];
 
     guardar();
-    renderCarrito(contextoCarrito);
+    // renderCarrito(contextoCarrito);
 
     cancelarEliminar(); // cierra modalEliminar
 
@@ -1389,7 +1418,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     guardar();
     renderCarrito(contextoCarrito);
-    actualizarCardProducto(productoActivo.id);
+    // actualizarCardProducto(productoActivo.id);
+    // renderProductosCategoria(categoriaActiva);
     actualizarAccionesProducto();
 
     // Limpiar selección temporal
