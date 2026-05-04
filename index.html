@@ -8,6 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
   <title>ÚtilesShop</title>
   <link rel="stylesheet" href="style/style.css">
+  <link rel="stylesheet" href="style/componentes/botton_nav.css">
 </head>
 <body>
 
@@ -82,20 +83,20 @@
 
 </div>
 
-<div class="hero">
-  <div id="hero-badge" class="hero-badge">🟢 Abierto ahora · Entregas en el día</div>
+<!-- <div class="hero hero-impacto">
+  <div class="hero-content">
+    <h1>Comprá en <span class="highlight">minutos</span></h1>
+    <p>Ofertas todos los días en Hurlingham</p>
 
-  <h1>Tu súper  <span class="highlight">en casa</span></h1>
-
-  <p>Recibí tu pedido en minutos</p>
-  <!-- <p>Hurlingham, Morris y Villa Tesei</p> -->
-</div>
+    <button class="btn-cta">Ver ofertas</button>
+  </div>
+</div> -->
 
 <section id="carouselSection" class="carousel-wrapper">
   <div class="carousel-container">
     <div class="carousel-track">
 
-      <div class="slide">
+      <div class="slide hero-slide">
         <picture>
           <source srcset="assets/banner3-desktop.webp" media="(max-width: 768px)">
           <img src="assets/banner3-desktop.webp" alt="">
@@ -107,7 +108,7 @@
         </div>
       </div>
 
-      <div class="slide">
+      <div class="slide hero-slide">
         <picture>
           <source srcset="assets/banner2-desktop.webp" media="(max-width: 768px)">
           <img src="assets/banner2-desktop.webp" alt="Envíos rápidos">
@@ -120,7 +121,7 @@
         </div>
       </div>
 
-      <div class="slide">
+      <div class="slide hero-slide">
         <picture>
           <source srcset="assets/banner1-desktop.webp" media="(max-width: 768px)">
           <img src="assets/banner1-desktop.webp" alt="Sorteos especiales">
@@ -306,8 +307,43 @@
   </div>
 </div>
 
+<!-- NUEVO BOTTON NAV -->
+
+<nav class="bottom-nav" id="bottomNav">
+  <button class="nav-item active" data-tab="inicio">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+      <path d="M3 10L12 3L21 10V20H3V10Z" stroke-width="2"/>
+    </svg>
+    <small>Inicio</small>
+  </button>
+
+  <button class="nav-item" data-tab="pedidos">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+      <path d="M3 7H21V20H3V7Z" stroke-width="2"/>
+      <path d="M16 3V7M8 3V7" stroke-width="2"/>
+    </svg>
+    <small>Pedidos</small>
+  </button>
+
+  <button class="nav-item" data-tab="perfil">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+      <circle cx="12" cy="8" r="4" stroke-width="2"/>
+      <path d="M4 20C4 16 8 14 12 14C16 14 20 16 20 20" stroke-width="2"/>
+    </svg>
+    <small>Perfil</small>
+  </button>
+</nav>
+
+<div id="modalDetalle" class="modal hidden">
+  <div class="modal-contenido">
+    <button id="cerrarDetalle">✖</button>
+    <div id="contenidoDetalle"></div>
+  </div>
+</div>
+
 
 <script type="module" src="javascript/main.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 </body>
 </html>
 

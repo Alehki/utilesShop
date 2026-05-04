@@ -1,13 +1,134 @@
 
 import { agregarItem, restarItem, calcularTotalDesde } from "./carrito-core.js";
-import { TODOS_LOS_PRODUCTOS, listas } from "./productos-data.js";
+// import { TODOS_LOS_PRODUCTOS, listas } from "./productos-data.js";
+import { obtenerProductos, obtenerListas } from "./productos/productos-service.js";
 import { normalizarTexto, obtenerResumenCarrito } from "./utils.js";
 import { guardarCarrito, obtenerCarrito } from "./storage.js";
 import { estaAbierto, actualizarEstadoHorario, actualizarHeroHorario} from "./horario.js";
 import { renderSeccion, renderDestacados } from "./ui-productos.js";
 import { renderCarrito, abrirCarrito, cerrarCarrito } from "./ui-carrito.js";
+import { crearPedido } from "./supabase/pedidos.js";
+import { obtenerPedidosCliente } from "./supabase/pedidos.js";
+import { renderPedidos } from "./ui-pedidos.js";
+import { obtenerItemsPedido } from "./supabase/pedidos.js";
+import { suscribirseAPedidos } from "./supabase/pedidos.js";
+import { supabase } from "./supabase/supabase-client.js";
 
 document.addEventListener("DOMContentLoaded", () => {
+
+  let TODOS_LOS_PRODUCTOS = [];
+  let listas = {};
+
+  async function initProductos() {
+    TODOS_LOS_PRODUCTOS = await obtenerProductos();
+    console.log("PRODUCTOSaa:", TODOS_LOS_PRODUCTOS);
+    listas = await obtenerListas();
+  }
+
+
+  window.verPedidos = async () => {
+    const pedidos = await obtenerPedidosCliente();
+    console.log(pedidos);
+  };
+
+  window.abrirPedidos = mostrarPedidos;
+
+  window.verDetallePedido = async (id) => {
+    try {
+      const items = await obtenerItemsPedido(id);
+
+      mostrarModalDetalle(id, items);
+
+    } catch (err) {
+      console.error(err);
+      alert("Error cargando detalle");
+    }
+  };
+
+  let canalPedidos = null;
+
+  async function mostrarPedidos() {
+    vistaActual = "pedidos";
+
+    main.innerHTML = `
+      <div class="header-categoria">
+        <button class="btn-volver">←</button>
+        <h2>Mis pedidos</h2>
+      </div>
+
+      <div id="contenedorPedidos"></div>
+    `;
+
+    const contenedor = document.getElementById("contenedorPedidos");
+
+    async function cargarPedidos() {
+      const pedidos = await obtenerPedidosCliente();
+      renderPedidos(pedidos, contenedor);
+
+      setTimeout(() => {
+        document.querySelectorAll(".btn-detalle").forEach(btn => {
+          btn.addEventListener("click", () => {
+            const id = btn.dataset.id;
+            verDetallePedido(id);
+          });
+        });
+      }, 0);
+    }
+
+    // primera carga
+    await cargarPedidos();
+
+    // 🔥 SOLO UNA SUSCRIPCIÓN
+    if (!canalPedidos) {
+      canalPedidos = suscribirseAPedidos(cargarPedidos);
+    }
+
+    document.querySelector(".btn-volver").onclick = () => {
+      vistaActual = "categorias";
+
+      if (canalPedidos) {
+        canalPedidos.unsubscribe();
+        canalPedidos = null;
+      }
+
+      renderTodo();
+    };
+  }
+
+  function mostrarModalDetalle(id, items) {
+    const cont = document.getElementById("contenidoDetalle");
+
+    let total = 0;
+
+    const htmlItems = items.map(i => {
+      total += i.precio * i.cantidad;
+
+      return `
+        <div class="detalle-item">
+          <span>${i.nombre}${i.color ? ` (${i.color})` : ""}</span>
+          <span>x${i.cantidad}</span>
+        </div>
+      `;
+    }).join("");
+
+    cont.innerHTML = `
+      <h3>Pedido #${id}</h3>
+
+      <div class="detalle-lista">
+        ${htmlItems}
+      </div>
+
+      <div class="detalle-total">
+        Total: $${total}
+      </div>
+    `;
+
+    document.getElementById("modalDetalle").classList.remove("hidden");
+  }
+
+  document.getElementById("cerrarDetalle").onclick = () => {
+    document.getElementById("modalDetalle").classList.add("hidden");
+  };
 
   function pedirEliminar (key) {
     idEliminar = key;
@@ -38,7 +159,8 @@ document.addEventListener("DOMContentLoaded", () => {
     renderCarrito(contextoCarrito);
   };
 
-  let vistaActual = "categorias";
+  let tabActiva = "inicio"; // inicio | pedidos | perfil
+  let vistaActual = "categorias"; // categorias | productos
   let categoriaActiva = null;
 
 
@@ -244,13 +366,10 @@ document.addEventListener("DOMContentLoaded", () => {
       actualizarCount();
     }
 
-    if (vistaActual === "productos") {
-      renderProductosCategoria(categoriaActiva);
+    if (tabActiva === "inicio") {
+      renderTodo();
     }
 
-    if (vistaActual === "categorias") {
-      renderDestacados(TODOS_LOS_PRODUCTOS, carrito, vistaActual);
-    }
   }
 
   function sincronizarUI() {
@@ -283,6 +402,52 @@ document.addEventListener("DOMContentLoaded", () => {
       barraBeneficios?.classList.add("hidden");
 
       renderProductosCategoria(categoriaActiva);
+    }
+  }
+
+  // De la nueva implementacion del botton nav
+
+  function renderApp() {
+
+    // ocultar todo primero
+    main.innerHTML = "";
+
+    const carousel = document.getElementById("carouselSection");
+    const hero = document.querySelector(".hero");
+    const destacados = document.querySelector(".seccion-destacados");
+    const barraBeneficios = document.querySelector(".barra-beneficios");
+
+    // 🔁 reset visual general
+    carousel?.classList.add("hidden");
+    hero?.classList.add("hidden");
+    destacados?.classList.add("hidden");
+    barraBeneficios?.classList.add("hidden");
+
+    // =========================
+    // 🏠 INICIO
+    // =========================
+    if (tabActiva === "inicio") {
+      renderTodo(); // usa tu sistema actual
+    }
+
+    // =========================
+    // 📦 PEDIDOS
+    // =========================
+    else if (tabActiva === "pedidos") {
+      mostrarPedidos()
+    }
+
+    // =========================
+    // 👤 PERFIL
+    // =========================
+    else if (tabActiva === "perfil") {
+
+      main.innerHTML = `
+        <h2 class="titulo-seccion">Mi perfil</h2>
+        <div style="padding:20px; color:#777;">
+          Configuración, datos, direcciones, etc.
+        </div>
+      `;
     }
   }
 
@@ -360,6 +525,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function actualizarBarraCarritoUI(cantidad, total) {
+    return; // La desactivamos con return por ahora para implementar nueva barra
     const carritoAbierto = !modalCarrito.classList.contains("hidden");
 
     if (cantidad > 0 && !carritoAbierto) {
@@ -575,6 +741,32 @@ document.addEventListener("DOMContentLoaded", () => {
   //   const controlesDiv = card.querySelector(".controles");
   //   controlesDiv.innerHTML = controles;
   // }
+
+  // nuevo botton nav
+
+  const navItems = document.querySelectorAll(".nav-item");
+
+  navItems.forEach(btn => {
+    btn.addEventListener("click", () => {
+
+      navItems.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+
+      const tab = btn.dataset.tab;
+
+      if (tabActiva === tab) return; // evita renders innecesarios
+
+      tabActiva = tab;
+
+      // reset interno cuando volvés a inicio
+      if (tab === "inicio") {
+        vistaActual = "categorias";
+        categoriaActiva = null;
+      }
+
+      renderApp(); // 🔥 nuevo render global
+    });
+  });
 
 
   /*  */
@@ -995,7 +1187,29 @@ document.addEventListener("DOMContentLoaded", () => {
     agregar(id);
   };
 
+  // window.agregar = function(id, color = null) {
+  //   carrito = agregarItem(carrito, TODOS_LOS_PRODUCTOS, id, color, 1);
+  //   guardar();
+  //   animarPopCarrito();
+  // };
+
   window.agregar = function(id, color = null) {
+
+    const producto = TODOS_LOS_PRODUCTOS.find(p => p.id === id);
+    if (!producto) return;
+
+    const stock = producto.stock ?? 0;
+
+    const cantidadActual = Object.values(carrito)
+      .filter(item => item.id === id)
+      .reduce((acc, item) => acc + item.cantidad, 0);
+
+    if (cantidadActual >= stock) {
+      console.log("🚫 Stock máximo alcanzado");
+      return;
+    }
+
+    // 🔽 TU LÓGICA ORIGINAL (intacta)
     carrito = agregarItem(carrito, TODOS_LOS_PRODUCTOS, id, color, 1);
     guardar();
     animarPopCarrito();
@@ -1250,7 +1464,7 @@ document.addEventListener("DOMContentLoaded", () => {
     habilitarScroll();
   };
 
-  document.getElementById("enviarWhatsapp").onclick = () => {
+  document.getElementById("enviarWhatsapp").onclick = async () => {
     const btn = document.getElementById("enviarWhatsapp");
     const direccionInput = document.getElementById("direccion");
     const metodoPagoSelect = document.getElementById("metodoPago");
@@ -1290,6 +1504,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Mostrar animación
     mostrarAnimacionPedido();
+
+    // De supa base
+    try {
+      await crearPedido(carrito, {
+        direccion,
+        metodoPago
+      });
+    } catch (err) {
+      console.log("ERROR COMPLETO:", err);
+
+      let mensaje = err?.message || err?.error_description || JSON.stringify(err);
+
+      alert("Error real: " + mensaje);
+      return;
+    }
 
     // Construir mensaje de WhatsApp
     let mensaje = "🛍️ *Nuevo pedido*\n";
@@ -1542,10 +1771,46 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   }
 
+  // ESCUCHAR CAMBIOS DE ADMIN
+
+  let canalProductos = null;
+
+  function suscribirseAProductos() {
+    console.log("📡 Suscribiendo productos (web)...");
+
+    supabase
+      .channel("productos-web")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "productos"
+        },
+        async () => {
+          console.log("🔥 CAMBIO PRODUCTO WEB");
+
+          TODOS_LOS_PRODUCTOS = await obtenerProductos();
+          listas = await obtenerListas();
+          renderTodo();
+        }
+      )
+      .subscribe((status) => {
+        console.log("📡 estado:", status);
+      });
+  }
+
+
   /* INIT */
-  renderTodo();
-  actualizarCount();
-  actualizarEstadoHorario();
+  (async () => {
+    await initProductos();
+
+    suscribirseAProductos();
+
+    renderApp();
+    actualizarCount();
+    actualizarEstadoHorario();
+  })();
 
   setInterval(actualizarEstadoHorario, 60 * 1000);
   setInterval(actualizarHeroHorario, 60 * 1000);

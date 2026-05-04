@@ -1,0 +1,39 @@
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  background: white;
+  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 1000;
+}
+
+.nav-item {
+  background: none;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 11px;
+  gap: 2px;
+  color: #777;
+}
+
+.nav-item.active {
+  color: #f5b800;
+}
+
+.nav-item svg{
+  width: 18px;
+  height: 18px;
+
+  transition: .3s;
+}
+
+.nav-item.active svg{
+  transform: scale(1.2);
+}

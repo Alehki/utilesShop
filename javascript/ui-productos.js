@@ -23,16 +23,25 @@ export function renderSeccion(listaProductos, contenedor, carrito, textoFiltro =
       .filter(item => item.id === p.id)
       .reduce((acc, item) => acc + item.cantidad, 0);
 
+    const stockMaximo = p.stock ?? 0;
+    const sinStock = stockMaximo <= 0;
+    const alcanzoStock = stockMaximo > 0 && cant >= stockMaximo;
+
     html += `
       <div class="card" id="producto-${p.id}" onclick="abrirProducto(${p.id})">
-        <img src="${p.img}" loading="lazy">
+        <img src="${(p.imagenes && p.imagenes[0]) || ''}" loading="lazy">
         <h3>${p.nombre}</h3>
         <div class="precio">$${p.precio}</div>
 
         <div class="controles">
           ${
             cant === 0
-              ? `<button onclick="event.stopPropagation(); agregarDesdeCard(${p.id})">Agregar</button>`
+            ? `<button 
+                  ${(sinStock || alcanzoStock) ? "disabled" : ""}
+                  onclick="event.stopPropagation(); agregarDesdeCard(${p.id})"
+              >
+                  ${sinStock ? "Sin stock" : (alcanzoStock ? "Máximo" : "Agregar")}
+              </button>`
               : `
                 ${
                   cant === 1
@@ -48,7 +57,11 @@ export function renderSeccion(listaProductos, contenedor, carrito, textoFiltro =
                       </button>`
                 }
                 <span>${cant}</span>
-                <button class="btn-icon primary" onclick="event.stopPropagation(); agregarDesdeCard(${p.id})">
+                <button 
+                  class="btn-icon primary" 
+                  ${(alcanzoStock ? "disabled" : "")}
+                  onclick="event.stopPropagation(); agregarDesdeCard(${p.id})"
+                >
                   <svg viewBox="0 0 24 24">
                     <path d="M12 5v14M5 12h14"/>
                   </svg>
@@ -81,16 +94,25 @@ export function renderDestacados(TODOS_LOS_PRODUCTOS, carrito, vistaActual) {
       .filter(item => item.id === p.id)
       .reduce((acc, item) => acc + item.cantidad, 0);
 
+    const stockMaximo = p.stock ?? 0;
+    const sinStock = stockMaximo <= 0;
+    const alcanzoStock = stockMaximo > 0 && cant >= stockMaximo;
+
     html += `
       <div class="card" id="producto-${p.id}" onclick="abrirProducto(${p.id})">
-        <img src="${p.img}" loading="lazy">
+        <img src="${(p.imagenes && p.imagenes[0]) || ''}" loading="lazy">
         <h3>${p.nombre}</h3>
         <div class="precio">$${p.precio}</div>
 
         <div class="controles">
           ${
             cant === 0
-              ? `<button onclick="event.stopPropagation(); agregarDesdeCard(${p.id})">Agregar</button>`
+            ? `<button 
+                  ${(sinStock || alcanzoStock) ? "disabled" : ""}
+                  onclick="event.stopPropagation(); agregarDesdeCard(${p.id})"
+              >
+                  ${sinStock ? "Sin stock" : (alcanzoStock ? "Máximo" : "Agregar")}
+              </button>`
               : `
                 ${
                   cant === 1
@@ -106,7 +128,11 @@ export function renderDestacados(TODOS_LOS_PRODUCTOS, carrito, vistaActual) {
                       </button>`
                 }
                 <span>${cant}</span>
-                <button class="btn-icon primary" onclick="event.stopPropagation(); agregarDesdeCard(${p.id})">
+                <button 
+                  class="btn-icon primary" 
+                  ${(alcanzoStock ? "disabled" : "")}
+                  onclick="event.stopPropagation(); agregarDesdeCard(${p.id})"
+                >
                   <svg viewBox="0 0 24 24">
                     <path d="M12 5v14M5 12h14"/>
                   </svg>
