@@ -64,6 +64,8 @@ window.verDetalle = async function(id) {
     return;
   }
 
+  console.log("ID CLICK:", id);
+
   const items = await obtenerItems(id);
 
   container.innerHTML = items.map(i => `

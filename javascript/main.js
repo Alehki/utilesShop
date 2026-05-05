@@ -21,7 +21,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function initProductos() {
     TODOS_LOS_PRODUCTOS = await obtenerProductos();
-    console.log("PRODUCTOSaa:", TODOS_LOS_PRODUCTOS);
     listas = await obtenerListas();
   }
 
@@ -50,13 +49,14 @@ document.addEventListener("DOMContentLoaded", () => {
   async function mostrarPedidos() {
     vistaActual = "pedidos";
 
+    // Este boton iba arriba del h2 de "Mis pedidos" lo sacamos por cuestiones de diseño del html dinamico y css.
+    // <button class="btn-volver">←</button>
     main.innerHTML = `
-      <div class="header-categoria">
-        <button class="btn-volver">←</button>
-        <h2>Mis pedidos</h2>
+      <div>
+        <h2 class="titulo-vista" >Mis pedidos</h2>
       </div>
 
-      <div id="contenedorPedidos"></div>
+      <div class="contenido-vista" contenido-vista id="contenedorPedidos"></div>
     `;
 
     const contenedor = document.getElementById("contenedorPedidos");
@@ -83,16 +83,17 @@ document.addEventListener("DOMContentLoaded", () => {
       canalPedidos = suscribirseAPedidos(cargarPedidos);
     }
 
-    document.querySelector(".btn-volver").onclick = () => {
-      vistaActual = "categorias";
+    // Parte del boton volver.
+    // document.querySelector(".btn-volver").onclick = () => {
+    //   vistaActual = "categorias";
 
-      if (canalPedidos) {
-        canalPedidos.unsubscribe();
-        canalPedidos = null;
-      }
+    //   if (canalPedidos) {
+    //     canalPedidos.unsubscribe();
+    //     canalPedidos = null;
+    //   }
 
-      renderTodo();
-    };
+    //   renderTodo();
+    // };
   }
 
   function mostrarModalDetalle(id, items) {
@@ -136,14 +137,43 @@ document.addEventListener("DOMContentLoaded", () => {
     actualizarScrollGlobal();
   };
 
-  function agregarDesdeCarrito (key) {
+  function puedeAgregarProducto(id, carrito, productos) {
+    const producto = productos.find(p => p.id === id);
+    if (!producto) return false;
+
+    const stock = producto.stock ?? 0;
+
+    const cantidadActual = Object.values(carrito)
+      .filter(item => item.id === id)
+      .reduce((acc, item) => acc + item.cantidad, 0);
+
+    return cantidadActual < stock;
+  }
+
+  function agregarConStock(carrito, productos, id, color = null, cantidad = 1) {
+    if (!puedeAgregarProducto(id, carrito, productos)) {
+      console.log("🚫 Stock máximo alcanzado");
+      return carrito;
+    }
+
+    return agregarItem(carrito, productos, id, color, cantidad);
+  }
+
+  function agregarDesdeCarrito(key) {
     const item = carrito[key];
     if (!item) return;
 
-    carrito = agregarItem(carrito, TODOS_LOS_PRODUCTOS, item.id, item.color, 1);
+    carrito = agregarConStock(
+      carrito,
+      TODOS_LOS_PRODUCTOS,
+      item.id,
+      item.color,
+      1
+    );
+
     guardar();
     renderCarrito(contextoCarrito);
-  };
+  }
 
   function restarDesdeCarrito(key) {
     const item = carrito[key];
@@ -340,7 +370,9 @@ document.addEventListener("DOMContentLoaded", () => {
     resumenDiv: document.getElementById("resumenCarrito"),
     msgMinimo: document.getElementById("mensajeCompraMinima"),
     msgHorario: document.getElementById("mensajeHorario"),
-    obtenerEstadoPedido
+    obtenerEstadoPedido,
+    puedeAgregarProducto,
+    TODOS_LOS_PRODUCTOS
   };
 
   /* UTILS */
@@ -443,10 +475,10 @@ document.addEventListener("DOMContentLoaded", () => {
     else if (tabActiva === "perfil") {
 
       main.innerHTML = `
-        <h2 class="titulo-seccion">Mi perfil</h2>
-        <div style="padding:20px; color:#777;">
-          Configuración, datos, direcciones, etc.
+        <div>
+          <h2 class="titulo-vista">Mi perfil</h2>
         </div>
+        <div class="contenido-vista" > Configuración, datos, direcciones, etc. </div>
       `;
     }
   }
@@ -1194,23 +1226,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // };
 
   window.agregar = function(id, color = null) {
-
-    const producto = TODOS_LOS_PRODUCTOS.find(p => p.id === id);
-    if (!producto) return;
-
-    const stock = producto.stock ?? 0;
-
-    const cantidadActual = Object.values(carrito)
-      .filter(item => item.id === id)
-      .reduce((acc, item) => acc + item.cantidad, 0);
-
-    if (cantidadActual >= stock) {
-      console.log("🚫 Stock máximo alcanzado");
-      return;
-    }
-
-    // 🔽 TU LÓGICA ORIGINAL (intacta)
-    carrito = agregarItem(carrito, TODOS_LOS_PRODUCTOS, id, color, 1);
+    carrito = agregarConStock(carrito, TODOS_LOS_PRODUCTOS, id, color, 1);
     guardar();
     animarPopCarrito();
   };

@@ -1320,21 +1320,27 @@ button.disabled {
   cursor: pointer;
 } */
 
-.header-categoria {
+.titulo-vista, .contenedor-perfil {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 10px 16px;
-  margin-bottom: 10px;
+  /* gap: 12px; */
+  /* padding: 10px 16px; */
+  /* margin-bottom: 10px; */
+  font-size: 25px;
 }
 
-.header-categoria h2 {
-  font-size: 20px;
+.contenido-vista{
+  padding-left: 16px;
+}
+
+/* .header-categoria h2 {
+  font-size: 30px;
   font-weight: 700;
   margin: 0;
-}
+} */
 
-.btn-volver {
+/* De flecha para volver de vista pedidos, desabilitado por custiones de diseño */
+/* .btn-volver {
   background: none;
   position: relative;
   bottom: 5px;
@@ -1343,7 +1349,7 @@ button.disabled {
   font-size: 22px;
   font-size: 30px;
   cursor: pointer;
-}
+} */
 
 /* =====================================================
    13. MODALES
@@ -1708,6 +1714,11 @@ h2{
 .btn-icon.danger svg {
   stroke: #dc2626;
 }
+
+/* .btn-icon.disabled {
+  opacity: 0.4;
+  pointer-events: none;
+} */
 
 
 /* HERO IMPACT */

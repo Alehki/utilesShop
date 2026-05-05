@@ -57,7 +57,7 @@ export function suscribirseAPedidos(callback) {
     .on(
       "postgres_changes",
       {
-        event: "INSERT,UPDATE", // podés cambiar a "INSERT,UPDATE"
+        event: '*', // podés cambiar a "INSERT,UPDATE"
         schema: "public",
         table: "pedidos",
         filter: `cliente_id=eq.${clienteId}`

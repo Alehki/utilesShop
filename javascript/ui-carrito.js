@@ -19,7 +19,10 @@ export function renderCarrito({
   resumenDiv,
   msgMinimo,
   msgHorario,
-  obtenerEstadoPedido
+  obtenerEstadoPedido,
+
+  puedeAgregarProducto,
+  TODOS_LOS_PRODUCTOS
 }) {
   const carrito = getCarrito();
   carritoItems.innerHTML = "";
@@ -83,6 +86,29 @@ export function renderCarrito({
 
     const spanCantidad = document.createElement("span");
     spanCantidad.textContent = p.cantidad;
+
+    // const puedeSumar = puedeAgregarProducto(
+    //   p.id,
+    //   carrito,
+    //   TODOS_LOS_PRODUCTOS
+    // );
+
+    // const btnMas = document.createElement("button");
+    // btnMas.classList.add("btn-icon", "primary");
+
+    // if (!puedeSumar) {
+    //   btnMas.classList.add("disabled");
+    //   btnMas.disabled = true;
+    //   btnMas.title = "Stock máximo alcanzado";
+    // }
+
+    // btnMas.innerHTML = `
+    //   <svg viewBox="0 0 24 24">
+    //     <path d="M12 5v14M5 12h14"/>
+    //   </svg>
+    // `;
+
+    // btnMas.onclick = () => agregarDesdeCarrito(key);
 
     const btnMas = document.createElement("button");
     // btnMas.textContent = "+";
