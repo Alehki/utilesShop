@@ -1480,6 +1480,11 @@ document.addEventListener("DOMContentLoaded", () => {
     habilitarScroll();
   };
 
+  function ocultarAnimacionPedido() {
+    const anim = document.getElementById("animacionPedido");
+    if (anim) anim.style.display = "none";
+  }
+
   document.getElementById("enviarWhatsapp").onclick = async () => {
     const btn = document.getElementById("enviarWhatsapp");
     const direccionInput = document.getElementById("direccion");
@@ -1523,63 +1528,90 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // De supa base
     try {
-      await crearPedido(carrito, {
+      const resultado = await crearPedido(carrito, {
         direccion,
         metodoPago
       });
+
+      if (resultado?.error === "stock_insuficiente") {
+        const ids = resultado.productos;
+
+        const nombres = [];
+
+        ids.forEach(id => {
+          if (carrito[id]) {
+            nombres.push(carrito[id].nombre);
+            delete carrito[id];
+          }
+        });
+
+        localStorage.setItem("carrito", JSON.stringify(carrito));
+        renderTodo();
+        actualizarCount();
+
+        alert(`❌ Sin stock: ${nombres.join(", ")}`);
+
+        // podés decidir si cerrar o no la modal
+        modalResumen.classList.add("hidden");
+        habilitarScroll();
+
+        if (typeof ocultarAnimacionPedido === "function") {
+          ocultarAnimacionPedido();
+        }
+
+        btn.disabled = false;
+        btn.dataset.enviado = "false";
+
+        return;
+      }
     } catch (err) {
-      console.log("ERROR COMPLETO:", err);
+      console.log("ERROR REAL:", err);
 
-      let mensaje = err?.message || err?.error_description || JSON.stringify(err);
+      const mensaje = err?.message || "";
 
-      alert("Error real: " + mensaje);
+      // 🔥 detectar error de stock desde backend (RAISE EXCEPTION)
+      if (mensaje.includes("Stock insuficiente")) {
+
+        // ⚠️ como no vienen IDs, limpiamos todo (seguro)
+        carrito = {};
+        localStorage.removeItem("carrito");
+
+        renderTodo();
+        actualizarCount();
+
+        alert("❌ Algunos productos se quedaron sin stock. Revisá tu carrito");
+
+      } else {
+        alert("Ocurrió un error inesperado");
+      }
+
+      if (typeof ocultarAnimacionPedido === "function") {
+        ocultarAnimacionPedido();
+      }
+
+      btn.disabled = false;
+      btn.dataset.enviado = "false";
+
       return;
     }
-
-    // Construir mensaje de WhatsApp
-    let mensaje = "🛍️ *Nuevo pedido*\n";
-
-    let subtotal = 0;
-
-    Object.values(carrito).forEach(p => {
-      mensaje += `\n• ${p.nombre}${p.color ? ` (${p.color})` : ""} x${p.cantidad}`;
-      subtotal += p.precio * p.cantidad;
-    });
-
-    const envio = 900;
-    const totalFinal = subtotal + envio;
-
-    mensaje += `\n\nSubtotal: $${subtotal}`;
-    mensaje += `\nEnvío: $${envio}`;
-    mensaje += `\n*Total: $${totalFinal}*`;
-
-    mensaje += `\n\n📍 ${direccion}`;
-    mensaje += `\n💳 ${metodoPago}`;
-
-    if (referencia) {
-      mensaje += `\n📝 ${referencia}`;
-    }
-
-    const texto = encodeURIComponent(mensaje);
 
     // Vaciar carrito y actualizar UI
     carrito = {};
     localStorage.removeItem("carrito");
     renderTodo();
     actualizarCount();
+
     modalResumen.classList.add("hidden");
     habilitarScroll();
 
-    // Esperar a que termine la animación para abrir WhatsApp
-    setTimeout(() => {
-      window.open(`https://wa.me/5491166967802?text=${texto}`, "_blank");
+    // cerrar animación
+    if (typeof ocultarAnimacionPedido === "function") {
+      ocultarAnimacionPedido();
+    }
 
-      // Reactivar botón unos ms después de abrir WhatsApp
-      setTimeout(() => {
-        btn.disabled = false;
-        btn.dataset.enviado = "false";
-      }, 200); // 200ms es suficiente para evitar clics rápidos
-    }, 1500); // coincide con la duración de la animación
+    // reactivar botón
+    btn.disabled = false;
+    btn.dataset.enviado = "false";
   };
 
 

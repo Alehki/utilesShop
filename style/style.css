@@ -1330,7 +1330,7 @@ button.disabled {
 }
 
 .contenido-vista{
-  padding-left: 16px;
+  padding-left: 4px;
 }
 
 /* .header-categoria h2 {
@@ -1340,7 +1340,7 @@ button.disabled {
 } */
 
 /* De flecha para volver de vista pedidos, desabilitado por custiones de diseño */
-/* .btn-volver {
+.btn-volver {
   background: none;
   position: relative;
   bottom: 5px;
@@ -1349,7 +1349,7 @@ button.disabled {
   font-size: 22px;
   font-size: 30px;
   cursor: pointer;
-} */
+}
 
 /* =====================================================
    13. MODALES
