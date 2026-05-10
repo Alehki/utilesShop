@@ -44,56 +44,47 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
+  async function cargarPedidos() {
+
+    const contenedor = document.getElementById("contenedorPedidos");
+
+    if (!contenedor) return;
+
+    const pedidos = await obtenerPedidosCliente();
+
+    renderPedidos(pedidos, contenedor);
+
+    setTimeout(() => {
+      document.querySelectorAll(".btn-detalle").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const id = btn.dataset.id;
+          verDetallePedido(id);
+        });
+      });
+    }, 0);
+  }
+
   let canalPedidos = null;
 
   async function mostrarPedidos() {
+
     vistaActual = "pedidos";
 
-    // Este boton iba arriba del h2 de "Mis pedidos" lo sacamos por cuestiones de diseño del html dinamico y css.
-    // <button class="btn-volver">←</button>
     main.innerHTML = `
       <div>
-        <h2 class="titulo-vista" >Mis pedidos</h2>
+        <h2 class="titulo-vista">Mis pedidos</h2>
       </div>
 
       <div class="contenido-vista" contenido-vista id="contenedorPedidos"></div>
     `;
 
-    const contenedor = document.getElementById("contenedorPedidos");
-
-    async function cargarPedidos() {
-      const pedidos = await obtenerPedidosCliente();
-      renderPedidos(pedidos, contenedor);
-
-      setTimeout(() => {
-        document.querySelectorAll(".btn-detalle").forEach(btn => {
-          btn.addEventListener("click", () => {
-            const id = btn.dataset.id;
-            verDetallePedido(id);
-          });
-        });
-      }, 0);
-    }
-
     // primera carga
     await cargarPedidos();
 
-    // 🔥 SOLO UNA SUSCRIPCIÓN
+    // realtime
     if (!canalPedidos) {
       canalPedidos = suscribirseAPedidos(cargarPedidos);
     }
-
-    // Parte del boton volver.
-    // document.querySelector(".btn-volver").onclick = () => {
-    //   vistaActual = "categorias";
-
-    //   if (canalPedidos) {
-    //     canalPedidos.unsubscribe();
-    //     canalPedidos = null;
-    //   }
-
-    //   renderTodo();
-    // };
   }
 
   function mostrarModalDetalle(id, items) {

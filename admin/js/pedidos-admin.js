@@ -1,4 +1,17 @@
-console.log("CARGANDO ADMIN JS");
+const ESTADOS = [
+  "recibido",
+  "preparando",
+  "en_camino",
+  "entregado"
+];
+
+const LABELS = {
+  recibido: "Pedido recibido",
+  preparando: "Preparando",
+  en_camino: "En camino",
+  entregado: "Entregado"
+};
+
 const supabaseAdmin = window.supabase.createClient(
   "https://jtumqhpuegqzmkgeofxw.supabase.co",
   "sb_publishable_7a6K3_VDHdqvyQhnj-0Cag_uyH7MlFw"
@@ -20,14 +33,31 @@ async function cargarPedidos() {
   renderPedidos(data);
 }
 
+function getTextoBoton(estado) {
+  const textos = {
+    preparando: "Comenzar preparación",
+    en_camino: "Enviar pedido",
+    entregado: "Marcar entregado"
+  };
+
+  return textos[estado] || "Continuar";
+}
+
 function getBoton(p) {
-  if (p.estado === "pendiente") {
-    return `<button onclick="pasarAPreparando('${p.id}')">Preparar</button>`;
+  const index = ESTADOS.indexOf(p.estado);
+
+  // último estado
+  if (index === ESTADOS.length - 1) {
+    return `<span class="estado-ok">✔ Entregado</span>`;
   }
-  if (p.estado === "preparando") {
-    return `<button onclick="marcarEntregado('${p.id}')">Entregar</button>`;
-  }
-  return `<span>✔ Entregado</span>`;
+
+  const siguienteEstado = ESTADOS[index + 1];
+
+  return `
+    <button onclick="cambiarEstado('${p.id}', '${siguienteEstado}')">
+      ${getTextoBoton(siguienteEstado)}
+    </button>
+  `;
 }
 
 function renderPedidos(pedidos) {
@@ -75,35 +105,16 @@ window.verDetalle = async function(id) {
   container.style.display = "block";
 }
 
-window.pasarAPreparando = async function(id) {
-  console.log("CLICK preparar:", id);
+window.cambiarEstado = async function(id, nuevoEstado) {
 
-  const { data, error } = await supabaseAdmin
+  const { error } = await supabaseAdmin
     .from("pedidos")
-    .update({ estado: "preparando" })
-    .eq("id", id);
-
-  console.log("RESULT:", data);
-  console.log("ERROR:", error);
-
-  if (error) {
-    alert("Error al actualizar");
-    return;
-  }
-
-}
-
-window.marcarEntregado = async function(id) {
-  console.log("CLICK entregar:", id);
-  const { data, error } = await supabaseAdmin
-    .from("pedidos")
-    .update({ estado: "entregado" })
+    .update({ estado: nuevoEstado })
     .eq("id", id);
 
   if (error) {
     console.error(error);
-    alert("Error");
-    return;
+    alert("Error al actualizar");
   }
 }
 
