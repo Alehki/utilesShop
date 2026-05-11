@@ -1,6 +1,5 @@
 const progresoAnterior = {};
 const pedidosFinalizados = {};
-const estadoRenderizado = {};
 
 const PASOS_PEDIDO = [
   "recibido",
@@ -41,9 +40,6 @@ function renderProgreso(estadoActual, pedidoId) {
 
   const actualIndex =
     PASOS_PEDIDO.indexOf(estadoActual);
-  
-  const debeAnimar =
-    estadoRenderizado[pedidoId] !== actualIndex;
 
   const progreso =
     actualIndex / (PASOS_PEDIDO.length - 1);
@@ -62,19 +58,11 @@ function renderProgreso(estadoActual, pedidoId) {
 
       ${PASOS_PEDIDO.map((paso, index) => `
 
-          <div class="paso ${
-            index < actualIndex
-              ? "completado"
-              : index === actualIndex
-                ? `
-                  ${
-                    debeAnimar
-                      ? "animar-activo"
-                      : "activo"
-                  }
-                `
-                : ""
-          }">
+        <div class="paso ${
+          index < actualIndex
+            ? "completado"
+            : ""
+        }">
 
           <div class="circulo">
             ${index < actualIndex ? "✓" : ""}
@@ -96,21 +84,13 @@ function animarProgresos(pedidos, contenedor) {
     .querySelectorAll(".pedido-progreso")
     .forEach(el => {
 
-    const pedidoId = el.dataset.id;
+      if (el.dataset.animado === "true") {
+        return;
+      }
 
-    const actualIndex =
-      Number(el.dataset.actual);
+      el.dataset.animado = "true";
 
-    if (
-      estadoRenderizado[pedidoId] ===
-      actualIndex
-    ) {
-      return;
-    }
-
-    estadoRenderizado[pedidoId] =
-      actualIndex;
-
+      const pedidoId = el.dataset.id;
 
       const progreso =
         Number(el.dataset.progreso);
@@ -143,6 +123,12 @@ function animarProgresos(pedidos, contenedor) {
         const actualIndex =
           Number(el.dataset.actual);
 
+        const pasos =
+          card.querySelectorAll(".paso");
+
+        pasos[actualIndex]
+          ?.classList.add("activo");
+
         card.classList.add(
           `estado-${estadoFinal}`
         );
@@ -164,12 +150,6 @@ function animarProgresos(pedidos, contenedor) {
           }, 300);
 
         }
-
-        const pasos =
-          card.querySelectorAll(".paso");
-
-        pasos[actualIndex]
-          ?.classList.add("activo");
 
       }, 700);
 

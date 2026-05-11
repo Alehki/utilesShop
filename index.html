@@ -9,11 +9,48 @@
   <title>ÚtilesShop</title>
   <link rel="stylesheet" href="style/style.css">
   <link rel="stylesheet" href="style/componentes/botton_nav.css">
+  <link rel="stylesheet" href="style/componentes/ui-pedidos.css">
+  <link rel="stylesheet" href="style/componentes/splash.css">
 </head>
 <body>
 <!-- <button onclick="localStorage.clear(); location.reload();">
   Limpiar datos
 </button> -->
+<!-- SPLASH -->
+<div id="splash">
+  <div class="logo-container">
+
+  <svg class="logo-svg" viewBox="0 0 120 100">
+
+    <defs>
+      <mask id="cut">
+        <rect width="100%" height="100%" fill="white"/>
+
+        <!-- flecha -->
+        <path
+          d="M45 65 L90 30 L80 25 L105 30 L85 50 Z"
+          fill="black"
+        />
+      </mask>
+    </defs>
+
+    <!-- M centrada -->
+    <path id="mPath"
+      d="M25 85 L25 15 L60 65 L95 15 L95 85"
+      stroke="#0F172A"
+      stroke-width="18"
+      fill="none"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      mask="url(#cut)"
+    />
+
+  </svg>
+
+    <p class="brand">MarketGO</p>
+  </div>
+</div>
+<!--  -->
 <header class="header">
   <div class="contenedor-titulo-iconocarrito">
     <!-- <div class="logo">📦 ÚtilesShop</div> -->
@@ -343,7 +380,7 @@
   </div>
 </div>
 
-
+<script type="module" src="javascript/splash.js"></script>
 <script type="module" src="javascript/main.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 </body>
