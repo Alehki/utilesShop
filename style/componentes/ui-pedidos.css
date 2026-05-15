@@ -17,6 +17,10 @@
 /*  */
 
 .pedido-card {
+
+  max-height: 500px;
+  overflow: hidden;
+  
   background: white;
   border-radius: 16px;
   padding: 16px;
@@ -31,6 +35,13 @@
     border-color .5s ease,
     transform .3s ease,
     box-shadow .3s ease;
+}
+
+.pedido-card.apareciendo {
+
+  animation:
+    aparecerPedido .35s ease;
+
 }
 
 .estado-recibido {
@@ -253,7 +264,7 @@
 
   background: white;
 
-  border: 3px solid #e5e5e5;
+  border: 2px solid #e5e5e5;
 
   margin: 0 auto;
 
@@ -273,7 +284,6 @@
     background-color .6s ease,
     border-color .6s ease,
     color .6s ease,
-    transform .5s cubic-bezier(.34,1.56,.64,1);
 }
 
 /* .paso.completado .circulo,
@@ -285,34 +295,7 @@
 
 } */
 
-/* @keyframes pintarCirculo {
-
-  to {
-    background-color: var(--color-estado);
-    border-color: var(--color-estado);
-    color: white;
-  }
-
-} */
-
-@keyframes pintarCirculo {
-
-  from {
-    background: white;
-    border-color: #e5e5e5;
-    color: transparent;
-  }
-
-  to {
-    background-color: var(--color-estado);
-    border-color: var(--color-estado);
-    color: white;
-  }
-
-}
-
-.paso.completado .circulo,
-.paso.activo .circulo {
+/* .paso.completado .circulo {
 
   background-color: var(--color-estado);
   border-color: var(--color-estado);
@@ -320,11 +303,108 @@
 
 }
 
+.paso.activo .circulo {
+
+  background-color: var(--color-estado);
+  border-color: var(--color-estado);
+  color: white;
+
+} */
+
+.paso.completado .circulo {
+
+  background-color: var(--color-estado);
+  border-color: var(--color-estado);
+  color: white;
+
+}
+
+.paso.activo .circulo {
+
+  background:
+    color-mix(
+      in srgb,
+      var(--color-estado) 18%,
+      white
+    );
+
+  border-color:
+    color-mix(
+      in srgb,
+      var(--color-estado) 18%,
+      white
+    );
+
+  color: white;
+
+}
+
+.paso.activo .circulo::before,
+.paso.animar-activo .circulo::before {
+
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  border-radius: 50%;
+
+  background: var(--color-estado);
+
+}
+
+.paso.activo:not(.finalizado) .circulo::before {
+
+  animation:
+    respirar 2s ease-in-out infinite;
+
+}
+
+.paso.finalizado .circulo::before {
+
+  animation: none;
+
+}
+
+.paso.animar-activo .circulo::before {
+
+  opacity: 0;
+
+  animation:
+    aparecerNucleo 0s linear 1s forwards,
+    respirar 2s ease-in-out 1s infinite;
+
+}
+
+@keyframes aparecerNucleo {
+
+  to {
+    opacity: 1;
+  }
+
+}
+
+@keyframes respirar {
+
+  0% {
+    transform: scale(1.1);
+  }
+
+  50% {
+    transform: scale(.2);
+  }
+
+  100% {
+    transform: scale(1.1);
+  }
+
+}
+
 .paso.animar-activo .circulo {
 
   animation:
-    pintarCirculo 0s linear .75s forwards,
-    pop .45s ease .75s both;
+    pop .45s ease 1s both;
 
 }
 
@@ -354,4 +434,32 @@
   100% {
     transform: scale(1);
   }
+}
+
+/* animacion de pedido que va a historial */
+
+.pedido-card.saliendo {
+
+  opacity: 0;
+
+  transform:
+    translateY(12px)
+    scale(.98);
+
+  max-height: 0;
+
+  margin-bottom: 0;
+
+  padding-top: 0;
+  padding-bottom: 0;
+
+  overflow: hidden;
+
+  transition:
+    opacity .45s ease,
+    transform .45s ease,
+    max-height .45s ease,
+    margin .45s ease,
+    padding .45s ease;
+
 }

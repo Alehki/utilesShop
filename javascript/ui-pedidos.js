@@ -1,6 +1,7 @@
 const progresoAnterior = {};
 const pedidosFinalizados = {};
 const estadoRenderizado = {};
+let historialInicializado = false;
 
 const PASOS_PEDIDO = [
   "recibido",
@@ -42,7 +43,11 @@ function renderProgreso(estadoActual, pedidoId) {
   const actualIndex =
     PASOS_PEDIDO.indexOf(estadoActual);
   
+  const yaRenderizado =
+  estadoRenderizado[pedidoId] !== undefined;
+
   const debeAnimar =
+    yaRenderizado &&
     estadoRenderizado[pedidoId] !== actualIndex;
 
   const progreso =
@@ -70,7 +75,9 @@ function renderProgreso(estadoActual, pedidoId) {
                   ${
                     debeAnimar
                       ? "animar-activo"
-                      : "activo"
+                      : estadoActual === "entregado"
+                        ? "activo finalizado"
+                        : "activo"
                   }
                 `
                 : ""
@@ -108,10 +115,6 @@ function animarProgresos(pedidos, contenedor) {
       return;
     }
 
-    estadoRenderizado[pedidoId] =
-      actualIndex;
-
-
       const progreso =
         Number(el.dataset.progreso);
 
@@ -140,9 +143,6 @@ function animarProgresos(pedidos, contenedor) {
           "estado-entregado"
         );
 
-        const actualIndex =
-          Number(el.dataset.actual);
-
         card.classList.add(
           `estado-${estadoFinal}`
         );
@@ -152,24 +152,48 @@ function animarProgresos(pedidos, contenedor) {
           pedidosFinalizados[pedidoId] !== true
         ) {
 
-          pedidosFinalizados[pedidoId] = true;
+          const demoraSalida = 1000;
+          const duracionSalida = 300;
 
           setTimeout(() => {
+
+            card.classList.add("saliendo");
+
+          }, demoraSalida);
+
+          setTimeout(() => {
+
+            pedidosFinalizados[pedidoId] = true;
 
             renderPedidos(
               pedidos,
               contenedor
             );
 
-          }, 300);
+          }, demoraSalida + duracionSalida);
 
         }
 
         const pasos =
           card.querySelectorAll(".paso");
 
-        pasos[actualIndex]
-          ?.classList.add("activo");
+        const pasoActivo =
+          pasos[actualIndex];
+
+        if (pasoActivo) {
+
+          pasoActivo.classList.remove(
+            "animar-activo"
+          );
+
+          void pasoActivo.offsetWidth;
+
+          pasoActivo.classList.add(
+            "activo"
+          );
+
+        }
+        estadoRenderizado[pedidoId] = actualIndex;
 
       }, 700);
 
@@ -178,6 +202,22 @@ function animarProgresos(pedidos, contenedor) {
 }
 
 export function renderPedidos(pedidos, contenedor) {
+
+  if (!historialInicializado) {
+
+    pedidos.forEach(pedido => {
+
+      if (pedido.estado === "entregado") {
+
+        pedidosFinalizados[pedido.id] = true;
+
+      }
+
+    });
+
+    historialInicializado = true;
+
+  }
 
   if (!pedidos.length) {
 
@@ -232,7 +272,7 @@ function formatearEstado(estado) {
 
   const estados = {
     recibido: "Recibido",
-    pendiente: "🟡 Pendiente",
+    pendiente: "En proceso",
     preparando: "Preparando",
     en_camino: "En camino",
     entregado: "Entregado"
@@ -267,18 +307,27 @@ function renderLista(titulo, lista) {
             p.id,
             p.estado
           );
+        
+        const animarEntrada =
+        esHistorial &&
+        estadoRenderizado[p.id] ===
+        PASOS_PEDIDO.length - 1;
 
         return `
           <div
-            class="pedido-card estado-${estadoInicial}"
+            class="
+              pedido-card
+              estado-${estadoInicial}
+              ${animarEntrada ? "apareciendo" : ""}
+            "
             data-estado-final="${p.estado}"
           >
 
             <div class="pedido-header">
 
-              <strong>
-                Pedido #${p.id}
-              </strong>
+              <span class="pedido-id">
+                Pedido #${String(p.id).slice(0, 8)}
+              </span>
 
               <span class="pedido-estado">
                 ${formatearEstado(p.estado)}
