@@ -1,0 +1,195 @@
+/* ================= CARRUSEL PRO ================= */
+.carousel-wrapper {
+  width: 100%;
+  margin-top: 10px;
+  /* margin-bottom: 30px; */
+  padding: 0 10px; /* espacio lateral SOLO en móvil */
+  box-sizing: border-box;
+}
+
+.carousel-container {
+  width: 100%;
+  border-radius: var(--radius);
+  overflow: hidden;
+  position: relative;
+}
+
+.carousel-track {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+  width: 100%;
+  will-change: transform; /* mejora precisión */
+}
+
+.slide {
+  flex: 0 0 100%;
+  height: 450px;
+  /* height: 220px; */
+  height: 150px;
+  position: relative;
+  /* box-shadow: 0 10px 25px rgba(0,0,0,0.15); */
+}
+
+.slide picture,
+.slide img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  /* object-fit:fill; */
+  object-position: center 100%;
+  transform: scale(1);
+}
+
+.slide-3 img{
+    transform: none;
+    object-position: center 30%;
+}
+/* .slide img {
+  filter: brightness(0.7) blur(1px);
+} */
+
+/* .slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+} */
+
+/* .slide::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0,0,0,0.65),
+    rgba(0,0,0,0.15)
+  );
+} */
+.slide::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(0,0,0,0.82) 0%,
+      rgba(0,0,0,0.45) 45%,
+      rgba(0,0,0,0.08) 100%
+    );
+
+  z-index: 1;
+}
+
+.slide-content {
+  position: absolute;
+  bottom: 18px;
+  left: 18px;
+  right: 18px;
+  color: white;
+  z-index: 2;
+}
+
+.slide-content {
+  position: absolute;
+
+  left: 22px;
+  bottom: 22px;
+
+  z-index: 2;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.slide-content-2, .slide-content-3{
+  top: 40px;
+}
+
+/* .slide-content h3 {
+  font-size: 18px;
+  font-weight: 800;
+  margin: 0;
+} */
+
+.slide-content h3 {
+  font-size: 24px;
+  line-height: 1.05;
+  font-weight: 900;
+
+  letter-spacing: -1px;
+
+  margin: 0;
+
+  max-width: 190px;
+}
+
+.slide-content p {
+  font-size: 13px;
+  margin-top: 4px;
+  opacity: 0.9;
+}
+
+.badge {
+  display: inline-block;
+  background: #fff;
+  color: #111;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 999px;
+  margin-bottom: 6px;
+}
+
+/* Flechas */
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0,0,0,0.4);
+  color: white;
+  border: none;
+  padding: 15px;
+  cursor: pointer;
+  font-size: 22px;
+  border-radius: 50%;
+  transition: 0.3s;
+}
+
+.arrow:hover {
+  background: var(--color-primary);
+}
+
+.left { left: 15px; }
+.right { right: 15px; }
+
+/* Puntitos */
+.dots {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  opacity: 0.5;
+  margin: 5px;
+  background-color: #ccc;
+  border-radius: 50%;
+  display: inline-block;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.dot.active {
+  /* width: 10px;
+  height: 10px; */
+
+  width: 18px;
+  height: 8px;
+  border-radius: 30%;
+
+  opacity: 1;
+  background-color: var(--amarillo-hover);
+}

@@ -28,10 +28,10 @@ export function renderSeccion(listaProductos, contenedor, carrito, textoFiltro =
     const alcanzoStock = stockMaximo > 0 && cant >= stockMaximo;
 
     html += `
-      <div class="card" id="producto-${p.id}" onclick="abrirProducto(${p.id})">
+      <div class="card card-categoria" id="producto-${p.id}" onclick="abrirProducto(${p.id})">
         <img src="${(p.imagenes && p.imagenes[0]) || ''}" loading="lazy">
-        <h3>${p.nombre}</h3>
         <div class="precio">$${p.precio}</div>
+        <h3>${p.nombre}</h3>
 
         <div class="controles">
           ${
@@ -99,10 +99,10 @@ export function renderDestacados(TODOS_LOS_PRODUCTOS, carrito, vistaActual) {
     const alcanzoStock = stockMaximo > 0 && cant >= stockMaximo;
 
     html += `
-      <div class="card" id="producto-${p.id}" onclick="abrirProducto(${p.id})">
+      <div class="card card-destacado" id="producto-${p.id}" onclick="abrirProducto(${p.id})">
         <img src="${(p.imagenes && p.imagenes[0]) || ''}" loading="lazy">
-        <h3>${p.nombre}</h3>
         <div class="precio">$${p.precio}</div>
+        <h3>${p.nombre}</h3>
 
         <div class="controles">
           ${

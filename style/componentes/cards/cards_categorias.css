@@ -1,0 +1,76 @@
+/* CATEGORIAS */
+
+/* Seria lo visual antes de entrar a una categoria */
+
+/* Este es para el titulo de ambas secciones */
+.titulo-seccion {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.grid-categorias{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:16px;
+}
+
+
+/* CARDS DENTRO DE LA CATEGORIA */
+
+/* Fondo de la categoria o espacio de atras */
+.productos {
+  display: grid;
+
+  grid-template-columns:
+    repeat(auto-fill, minmax(140px, 1fr));
+
+  gap: 14px;
+}
+
+.card-categoria{
+  overflow:hidden;
+  cursor:pointer;
+}
+
+
+.card-categoria:hover{
+  transform:translateY(-4px);
+  box-shadow: var(--shadow-hover);
+}
+
+.categoria-img{
+  width:100%;
+  aspect-ratio: 16/9;
+  overflow:hidden;
+}
+
+.categoria-img img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.categoria-info{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+
+  padding: 8px 4px;
+}
+
+.card-categoria h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.categoria-nombre{
+  font-size: 14px;
+  font-weight:600;
+}
+
+.categoria-arrow{
+  font-size:18px;
+  opacity:0.5;
+}

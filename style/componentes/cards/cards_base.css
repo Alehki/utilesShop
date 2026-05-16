@@ -1,0 +1,126 @@
+.card {
+  background: white;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+
+  display: flex;
+  flex-direction: column;
+  font-size: 13px;
+  padding: 8px;
+  height: 100%;
+
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+}
+
+/*kisowea: Para que los títulos no desarmen visualmente la card:*/
+.card h3 {
+  font-size: 13px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+
+  /* font-size: var(--text-md); */
+  font-weight: 600;
+
+  line-height: 1;
+
+  margin: 8px 0 4px;
+  padding: 10px;
+}
+
+.card img {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  height: 78px;
+  object-fit: contain;
+  margin-bottom: 6px;
+}
+
+.precio {
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: -0.3px;
+  color: var(--negro);
+  padding: 10px;
+}
+
+/* evita sombra fea al restar cuando queda un producto*/
+.controles {
+  display: flex;
+  flex-direction: row;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 10px;
+
+  margin-top: auto;
+}
+
+.controles button {
+  border-radius: var(--radius);
+  border: none;
+  cursor: pointer;
+
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+}
+
+.controles button:focus {
+  outline: none;
+}
+
+.controles button:active {
+  transform: scale(0.95);
+}
+
+/* Botones de cantidad (+ − 🗑) */
+.controles button:not(:only-child) {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 12px;
+}
+
+/* Botón Agregar */
+.controles button:only-child {
+  /* padding: 9px 16px; */
+  width: 90%;
+  padding: 8px 12px;
+  font-size: 13px;
+  white-space: nowrap;
+  background: var(--amarillo-principal);
+  color: black;
+  border-radius: var(--radius);
+}
+
+.btn-principal {
+  width: 100%;
+  padding: 14px;
+  border-radius: var(--radius);
+  border: none;
+  background: var(--color-black);
+  color: white;
+  cursor: pointer;
+}
+
+.controles span {
+  min-width: 20px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 14px;
+}

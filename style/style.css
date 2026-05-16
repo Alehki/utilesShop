@@ -158,6 +158,7 @@ button {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 12px; /* 👈 SEPARA del buscador */
+  margin-bottom: 0px;
 }
 
 .contenedor_logo{
@@ -176,7 +177,8 @@ button {
   align-items: center;
   font-family: 'Inter', sans-serif;
   font-weight: 800;
-  font-size: 28px;
+  /* font-size: 28px; */
+  font-size: 20px;
   letter-spacing: -0.8px;
 }
 
@@ -222,8 +224,10 @@ button {
 }
 
 .icon-cart {
-  width: 24px;
-  height: 24px;
+  /* width: 24px;
+  height: 24px; */
+  width: 20px;
+  height: 20px;
   color: var(--negro);
   opacity: 0.9;
 
@@ -291,7 +295,10 @@ button {
 
 #buscador {
   width: 100%;
-  height: 48px;
+  /* height: 48px; */
+
+  height: 38px;
+
   border-radius: 999px;
   border: none;
   padding: 0 20px;
@@ -305,14 +312,14 @@ button {
 }
 
 .lupa-container{
-  width: 30px;
-  height: 30px;
+  /* width: 30px;
+  height: 30px; */
+  width: 20px;
+  height: 20px;
   position: absolute;
   right: 14px;
   top: 50%;
   transform: translateY(-50%);
-  width: 30px;
-  height: 30px;
   pointer-events: none;
 
   background-color: var(--amarillo-principal);
@@ -327,8 +334,10 @@ button {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 18px;
-  height: 18px;
+  /* width: 18px;
+  height: 18px; */
+  width: 14px;
+  height: 14px;
   pointer-events: none;
   border-radius: 50%;
 }
@@ -416,275 +425,12 @@ button {
 /* =====================================================
    6. CARRUSEL
 ===================================================== */
-
-/* ================= CARRUSEL PRO ================= */
-.carousel-wrapper {
-  width: 100%;
-  margin-top: 20px;
-  margin-bottom: 30px;
-  padding: 0 20px; /* espacio lateral SOLO en móvil */
-  box-sizing: border-box;
-}
-
-.carousel-container {
-  width: 100%;
-  border-radius: var(--radius);
-  overflow: hidden;
-  position: relative;
-}
-
-.carousel-track {
-  display: flex;
-  transition: transform 0.5s ease-in-out;
-  width: 100%;
-  will-change: transform; /* mejora precisión */
-}
-
-.slide {
-  flex: 0 0 100%;
-  height: 450px;
-  height: 220px;
-  position: relative;
-  /* box-shadow: 0 10px 25px rgba(0,0,0,0.15); */
-}
-
-.slide picture,
-.slide img {
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: cover;
-}
-
-/* .slide img {
-  filter: brightness(0.7) blur(1px);
-} */
-
-/* .slide img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-} */
-
-.slide::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to top,
-    rgba(0,0,0,0.65),
-    rgba(0,0,0,0.15)
-  );
-}
-
-.slide-content {
-  position: absolute;
-  bottom: 18px;
-  left: 18px;
-  right: 18px;
-  color: white;
-  z-index: 2;
-}
-
-.slide-content-2, .slide-content-3{
-  top: 40px;
-}
-
-.slide-content h3 {
-  font-size: 18px;
-  font-weight: 800;
-  margin: 0;
-}
-
-.slide-content p {
-  font-size: 13px;
-  margin-top: 4px;
-  opacity: 0.9;
-}
-
-.badge {
-  display: inline-block;
-  background: #fff;
-  color: #111;
-  font-size: 11px;
-  font-weight: 700;
-  padding: 4px 8px;
-  border-radius: 999px;
-  margin-bottom: 6px;
-}
-
-/* Flechas */
-.arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(0,0,0,0.4);
-  color: white;
-  border: none;
-  padding: 15px;
-  cursor: pointer;
-  font-size: 22px;
-  border-radius: 50%;
-  transition: 0.3s;
-}
-
-.arrow:hover {
-  background: var(--color-primary);
-}
-
-.left { left: 15px; }
-.right { right: 15px; }
-
-/* Puntitos */
-.dots {
-  text-align: center;
-  margin-top: 10px;
-}
-
-.dot {
-  width: 8px;
-  height: 8px;
-  opacity: 0.5;
-  margin: 5px;
-  background-color: #ccc;
-  border-radius: 50%;
-  display: inline-block;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.dot.active {
-  width: 10px;
-  height: 10px;
-  opacity: 1;
-  background-color: var(--amarillo-hover);
-}
+/* Lo pase a slider.css */
 
 /* =====================================================
    7. PRODUCTOS / CARDS
 ===================================================== */
-.productos {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px;
-  text-align: center;
-}
-
-.card {
-  background: white;
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-soft);
-
-  display: flex;
-  flex-direction: column;
-  font-size: 14px;
-  padding: 18px;
-
-  transition: transform .2s ease, box-shadow .2s ease;
-}
-
-.card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-hover);
-}
-
-/*kisowea: Para que los títulos no desarmen visualmente la card:*/
-.card h3 {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-
-  font-size: var(--text-md);
-  font-weight: 600;
-  margin: 12px 0 6px;
-}
-
-.card img {
-  display: block;
-  margin: 0 auto;
-  max-width: 100%;
-  height: 140px;
-  object-fit: contain;
-  margin-bottom: 6px;
-}
-
-.precio {
-  font-weight: 700;
-  font-size: 18px;
-  letter-spacing: -0.3px;
-  color: var(--negro);
-  text-align: center;
-  padding-bottom: 12px;
-}
-
-.controles {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  margin-top: auto;
-}
-
-/* evita sombra fea al restar cuando queda un producto*/
-
-.controles button {
-  border-radius: var(--radius);
-  border: none;
-  cursor: pointer;
-
-  -webkit-tap-highlight-color: transparent;
-  outline: none;
-}
-
-.controles button:focus {
-  outline: none;
-}
-
-.controles button:active {
-  transform: scale(0.95);
-}
-
-/* Botones de cantidad (+ − 🗑) */
-.controles button:not(:only-child) {
-  width: 32px;
-  height: 32px;
-  padding: 0;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  font-size: 12px;
-}
-
-/* Botón Agregar */
-.controles button:only-child {
-  padding: 9px 16px;
-  font-size: 14px;
-  white-space: nowrap;
-  background: var(--amarillo-principal);
-  color: black;
-  border-radius: var(--radius);
-}
-
-.btn-principal {
-  width: 100%;
-  padding: 14px;
-  border-radius: var(--radius);
-  border: none;
-  background: var(--color-black);
-  color: white;
-  cursor: pointer;
-}
-
-.controles span {
-  min-width: 20px;
-  text-align: center;
-  font-weight: 600;
-  font-size: 14px;
-}
-
+/* cards enviadas a archivo individual */
 /* =====================================================
    8. CARRITO
 ===================================================== */
@@ -1242,114 +988,7 @@ button.disabled {
    12. CATEGORIAS
 ===================================================== */
 
-.titulo-seccion {
-  font-size: 26px;
-  font-weight: bold;
-  margin-bottom: 35px;
-}
-
-.grid-categorias{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:16px;
-}
-
-.card-categoria{
-  background:white;
-  border-radius: var(--radius);
-  overflow:hidden;
-  cursor:pointer;
-
-  box-shadow: var(--shadow-soft);
-
-  transition:transform .2s ease, box-shadow .2s ease;
-}
-
-.card-categoria:hover{
-  transform:translateY(-4px);
-  box-shadow: var(--shadow-hover);
-}
-
-.categoria-img{
-  width:100%;
-  aspect-ratio: 16/9;
-  overflow:hidden;
-}
-
-.categoria-img img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
-
-.categoria-info{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-
-  padding:12px 14px;
-}
-
-.card-categoria h3 {
-  margin: 0;
-  font-size: 16px;
-  font-weight: 600;
-}
-
-.categoria-nombre{
-  font-size:16px;
-  font-weight:600;
-}
-
-.categoria-arrow{
-  font-size:18px;
-  opacity:0.5;
-}
-
-/* .header-categoria {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  margin-bottom: 20px;
-}
-
-.btn-volver {
-  background: none;
-  border: none;
-  font-size: 22px;
-  cursor: pointer;
-} */
-
-.titulo-vista, .contenedor-perfil {
-  display: flex;
-  align-items: center;
-  /* gap: 12px; */
-  /* padding: 10px 16px; */
-  /* margin-bottom: 10px; */
-  font-size: 25px;
-}
-
-.contenido-vista{
-  padding-left: 4px;
-}
-
-/* .header-categoria h2 {
-  font-size: 30px;
-  font-weight: 700;
-  margin: 0;
-} */
-
-/* De flecha para volver de vista pedidos, desabilitado por custiones de diseño */
-.btn-volver {
-  background: none;
-  position: relative;
-  bottom: 5px;
-  right: 10px;
-  border: none;
-  font-size: 22px;
-  font-size: 30px;
-  cursor: pointer;
-}
+/* categorias movidas a cards.css */
 
 /* =====================================================
    13. MODALES
@@ -1560,65 +1199,6 @@ button.disabled {
 @media (min-width: 768px) {
   .mobile-cart {
     display: none;
-  }
-}
-
-
-/* ===== DESTACADOS SCROLL ===== */
-
-h2{
-  margin: 20px;
-}
-
-.contenedor{
-  background: linear-gradient(135deg, #FFF8CC, #FFE066);
-  border-radius: 40px 150px 50px 0px;
-  /* background: transparent; */
-  box-shadow: var(--shadow-soft);
-  border: 1px solid rgba(0,0,0,0.03);
-  width: 100%;
-  max-width: 100%;
-}
-
-.contenedor h2{
-  margin: 0 0 12px 8px;
-}
-
-.destacados-scroll {
-  display: flex;
-  gap: 14px;
-  overflow-x: auto;
-  padding: 10px 5px 20px;
-  scroll-snap-type: x mandatory;
-}
-
-.destacados-scroll::-webkit-scrollbar {
-  display: none;
-}
-
-/* Card horizontal */
-.destacados-scroll .card {
-  min-width: 180px;
-  max-width: 180px;
-  flex: 0 0 auto;
-  scroll-snap-align: start;
-}
-
-.destacados-scroll .card{
-  background: #ffffffee;
-  backdrop-filter: blur(4px);
-}
-
-/* Un poquito más grandes en mobile */
-@media (max-width: 768px) {
-  .destacados-scroll .card {
-    min-width: 160px;
-  }
-}
-
-@media (min-width: 768px) {
-  .destacados-scroll {
-    gap: 100px;
   }
 }
 

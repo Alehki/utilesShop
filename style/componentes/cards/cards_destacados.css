@@ -1,0 +1,92 @@
+/* .contenedor{
+  background:
+    linear-gradient(
+      180deg,
+      #fffdf4,
+      #fff7d6
+    );
+
+  border-radius: 60px 0px;
+
+  background-color: #040833;
+
+} */
+
+.contenedor{
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(255,255,255,0.9),
+      transparent 35%
+    ),
+
+    radial-gradient(
+      circle at bottom right,
+      rgba(255,196,0,0.25),
+      transparent 40%
+    ),
+
+    linear-gradient(
+      135deg,
+      #fffdf5 0%,
+      #fff3b0 45%,
+      #ffe066 100%
+    );
+
+  border-radius: 42px;
+
+  padding: 18px;
+
+  box-shadow:
+    0 10px 30px rgba(255, 200, 0, 0.18);
+
+  position: relative;
+  /* overflow: hidden; */
+}
+
+.contenedor h2{
+  margin: 0 0 12px 8px;
+  /* color: whitesmoke; */
+}
+
+.destacados-scroll {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  padding: 8px 8px 12px;
+  scroll-snap-type: x mandatory;
+}
+
+.destacados-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Card horizontal */
+.card-destacado {
+  min-width: 155px;
+  max-width: 155px;
+  padding: 10px;
+
+  border-radius: 22px;
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  background: #ffffffee;
+  backdrop-filter: blur(4px);
+}
+
+.card-destacado img{
+  height: 82px;
+  margin-bottom: 8px;
+}
+
+.card-destacado h3{
+  /* text-align: center; */
+  font-size: 10px;
+  margin: 4px 0;
+}
+
+.card-destacado .precio{
+  font-size: 16px;
+  padding-bottom: 6px;
+}
+

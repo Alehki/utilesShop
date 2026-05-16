@@ -1,0 +1,50 @@
+@import url("./cards/cards_destacados.css");
+@import url("./cards/cards_categorias.css");
+@import url("./cards/cards_base.css");
+
+/* ===== DESTACADOS SCROLL ===== */
+
+/* Un poquito más grandes en mobile */
+@media (max-width: 768px) {
+  .card-destacado {
+    min-width: 160px;
+  }
+}
+
+@media (min-width: 768px) {
+  .destacados-scroll {
+    gap: 100px;
+  }
+}
+
+
+.titulo-vista, .contenedor-perfil {
+  display: flex;
+  align-items: center;
+  /* gap: 12px; */
+  /* padding: 10px 16px; */
+  /* margin-bottom: 10px; */
+  font-size: 25px;
+}
+
+.contenido-vista{
+  padding-left: 4px;
+}
+
+/* .header-categoria h2 {
+  font-size: 30px;
+  font-weight: 700;
+  margin: 0;
+} */
+
+/* De flecha para volver de vista pedidos, desabilitado por custiones de diseño */
+.btn-volver {
+  background: none;
+  position: relative;
+  bottom: 5px;
+  right: 10px;
+  border: none;
+  font-size: 22px;
+  font-size: 30px;
+  cursor: pointer;
+}
