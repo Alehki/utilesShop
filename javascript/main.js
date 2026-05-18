@@ -222,16 +222,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
     categorias.forEach(cat => {
       const card = document.createElement("div");
-      card.className = "card-categoria";
+      // card.className = "card-categoria-home categoria";
+      card.className = `card-categoria-home categoria-${cat.id}`;
 
     card.innerHTML = `
-      <div class="categoria-img">
+      <div class="card-categoria-img">
         <img src="assets/categorias/${cat.id}.webp" alt="${cat.nombre}">
       </div>
 
-      <div class="categoria-info">
-        <span class="categoria-nombre">${cat.nombre}</span>
-        <span class="categoria-arrow">›</span>
+      <div class="card-categoria-info">
+        <span class="card-categoria-nombre">${cat.nombre}</span>
+        <span class="card-categoria-arrow">›</span>
       </div>
     `;
 

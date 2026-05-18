@@ -1,24 +1,93 @@
 /* CATEGORIAS */
 
-/* Seria lo visual antes de entrar a una categoria */
-
 /* Este es para el titulo de ambas secciones */
 .titulo-seccion {
-  font-size: 24px;
+  font-size: 23px;
   font-weight: bold;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
+  /* margin-bottom: 20px; */
 }
 
+
+/* Este es el contenedor donde se agrega cada categoria */
 .grid-categorias{
   display:grid;
   grid-template-columns:repeat(3,1fr);
   gap:16px;
 }
 
+/* Es el icono o simbolo de card de categoria. */
+.card-categoria-home{
+  cursor:pointer;
+  border-radius: 18px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  background: white;
+  padding: 8px;
 
-/* CARDS DENTRO DE LA CATEGORIA */
+}
 
-/* Fondo de la categoria o espacio de atras */
+.categoria-libreria{
+  background:#eef7ff;
+}
+
+.categoria-snacks{
+  background: #fff7cc;
+}
+
+.categoria-almacen{
+  background:#edfcef;
+}
+
+.categoria-bebidas{
+  background:#fff4e8;
+}
+
+
+
+
+.card-categoria-home:hover{
+  transform:translateY(-2px);
+  box-shadow: var(--shadow-hover);
+}
+
+.card-categoria-img{
+  width:100%;
+  aspect-ratio: 1/1;
+  aspect-ratio: 16/9;
+  overflow:hidden;
+
+  border-radius: 10px;
+
+  /* box-shadow: 5px 5px 0px rgb(30, 71, 106); */
+  
+}
+
+.card-categoria-img img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+}
+
+.card-categoria-info{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+
+  /* padding: 8px 4px; */
+  padding: 10px 6px 4px;
+}
+
+.card-categoria-nombre{
+  font-size: 14px;
+  font-weight:600;
+}
+
+.card-categoria-arrow{
+  font-size:18px;
+  opacity:0.5;
+}
+
+/* Este es el contenedor donde estan las cards cuando se abre una categorias cualquiera.*/
 .productos {
   display: grid;
 
@@ -26,51 +95,4 @@
     repeat(auto-fill, minmax(140px, 1fr));
 
   gap: 14px;
-}
-
-.card-categoria{
-  overflow:hidden;
-  cursor:pointer;
-}
-
-
-.card-categoria:hover{
-  transform:translateY(-4px);
-  box-shadow: var(--shadow-hover);
-}
-
-.categoria-img{
-  width:100%;
-  aspect-ratio: 16/9;
-  overflow:hidden;
-}
-
-.categoria-img img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
-
-.categoria-info{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-
-  padding: 8px 4px;
-}
-
-.card-categoria h3 {
-  margin: 0;
-  font-size: 16px;
-  font-weight: 600;
-}
-
-.categoria-nombre{
-  font-size: 14px;
-  font-weight:600;
-}
-
-.categoria-arrow{
-  font-size:18px;
-  opacity:0.5;
 }

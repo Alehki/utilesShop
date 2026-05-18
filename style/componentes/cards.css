@@ -1,19 +1,20 @@
+@import url("./cards/cards_base.css");
 @import url("./cards/cards_destacados.css");
 @import url("./cards/cards_categorias.css");
-@import url("./cards/cards_base.css");
+
 
 /* ===== DESTACADOS SCROLL ===== */
 
 /* Un poquito más grandes en mobile */
 @media (max-width: 768px) {
   .card-destacado {
-    min-width: 160px;
+    min-width: 140px;
   }
 }
 
 @media (min-width: 768px) {
   .destacados-scroll {
-    gap: 100px;
+    gap: 20px;
   }
 }
 

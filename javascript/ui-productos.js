@@ -28,10 +28,21 @@ export function renderSeccion(listaProductos, contenedor, carrito, textoFiltro =
     const alcanzoStock = stockMaximo > 0 && cant >= stockMaximo;
 
     html += `
-      <div class="card card-categoria" id="producto-${p.id}" onclick="abrirProducto(${p.id})">
-        <img src="${(p.imagenes && p.imagenes[0]) || ''}" loading="lazy">
-        <div class="precio">$${p.precio}</div>
-        <h3>${p.nombre}</h3>
+      <div class="card card-producto" id="producto-${p.id}" onclick="abrirProducto(${p.id})">
+
+        <div class="top-card">
+          <div class="imagen-producto">
+            <img src="${(p.imagenes && p.imagenes[0]) || ''}" loading="lazy">
+          </div>
+        </div>
+
+        <div class="info-producto">
+
+          <div class="precio">$${p.precio}</div>
+
+          <h3>${p.nombre}</h3>
+
+        </div>
 
         <div class="controles">
           ${
@@ -100,9 +111,16 @@ export function renderDestacados(TODOS_LOS_PRODUCTOS, carrito, vistaActual) {
 
     html += `
       <div class="card card-destacado" id="producto-${p.id}" onclick="abrirProducto(${p.id})">
-        <img src="${(p.imagenes && p.imagenes[0]) || ''}" loading="lazy">
-        <div class="precio">$${p.precio}</div>
-        <h3>${p.nombre}</h3>
+        <div class="top-card">
+          <div class="imagen-producto">
+            <img src="${(p.imagenes && p.imagenes[0]) || ''}" loading="lazy">
+          </div>
+        </div>
+
+        <div class="info-producto">
+          <div class="precio">$${p.precio}</div>
+          <h3>${p.nombre}</h3>
+        </div>
 
         <div class="controles">
           ${
