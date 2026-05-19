@@ -13,6 +13,7 @@ import { renderPedidos } from "./ui-pedidos.js";
 import { obtenerItemsPedido } from "./supabase/pedidos.js";
 import { suscribirseAPedidos } from "./supabase/pedidos.js";
 import { supabase } from "./supabase/supabase-client.js";
+import { refrescarPedidosActivos } from "./ui-pedidos-badge.js";
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -83,7 +84,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // realtime
     if (!canalPedidos) {
-      canalPedidos = suscribirseAPedidos(cargarPedidos);
+      canalPedidos = suscribirseAPedidos(async () => {
+
+      // actualizar badge SIEMPRE
+      await refrescarPedidosActivos();
+
+      // actualizar vista SOLO si estoy en pedidos
+      if (tabActiva === "pedidos") {
+        cargarPedidos();
+      }
+
+    });
     }
   }
 
@@ -573,7 +584,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnCarrito = document.getElementById("btnCarrito");
     btnCarrito.classList.toggle("disabled", cantidad === 0);
   }
-
 
   /* 2 funciones nuevas para bloquear scroll */
   function bloquearScroll() {
@@ -1590,6 +1600,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Vaciar carrito y actualizar UI
     carrito = {};
     localStorage.removeItem("carrito");
+    await refrescarPedidosActivos();
     renderTodo();
     actualizarCount();
 
@@ -1846,6 +1857,8 @@ document.addEventListener("DOMContentLoaded", () => {
     await initProductos();
 
     suscribirseAProductos();
+
+    await refrescarPedidosActivos();
 
     renderApp();
     actualizarCount();

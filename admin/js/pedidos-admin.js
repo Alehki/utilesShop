@@ -12,15 +12,33 @@ const LABELS = {
   entregado: "Entregado"
 };
 
-const supabaseAdmin = window.supabase.createClient(
-  "https://jtumqhpuegqzmkgeofxw.supabase.co",
-  "sb_publishable_7a6K3_VDHdqvyQhnj-0Cag_uyH7MlFw"
-);
+const sonidoPedido = new Audio("./sounds/pedido.mp3");
+let sonidoHabilitado = false;
+let timeoutPedidos = null;
 
-let timeout = null;
+document.addEventListener("click", habilitarAudio, { once:true });
+
+function habilitarAudio(){
+
+  sonidoPedido.play()
+    .then(() => {
+
+      sonidoPedido.pause();
+      sonidoPedido.currentTime = 0;
+
+      sonidoHabilitado = true;
+
+      console.log("🔊 Audio habilitado");
+
+    })
+    .catch(err => {
+      console.log("Error habilitando audio", err);
+    });
+
+}
 
 async function cargarPedidos() {
-  const { data, error } = await supabaseAdmin
+  const { data, error } = await window.supabaseAdmin
     .from("pedidos")
     .select("*")
     .order("created_at", { ascending: false });
@@ -69,17 +87,37 @@ function renderPedidos(pedidos) {
     div.classList.add("pedido");
 
     div.innerHTML = `
-      <div class="pedido-header">Pedido #${p.id}</div>
 
-      <div class="estado">Estado: ${p.estado}</div>
+      <div class="pedido-top">
 
-      <div>Fecha: ${new Date(p.created_at).toLocaleString()}</div>
+        <div>
+          <div class="pedido-id">
+            Pedido #${p.id}
+          </div>
 
-      <button onclick="verDetalle('${p.id}')">Ver detalle</button>
+          <div class="pedido-fecha">
+            ${new Date(p.created_at).toLocaleString()}
+          </div>
+        </div>
 
-      ${getBoton(p)}
+        <div class="estado estado-${p.estado}">
+          ${LABELS[p.estado]}
+        </div>
 
-      <div id="detalle-${p.id}" class="detalle" style="display:none;"></div>
+      </div>
+
+      <div class="pedido-acciones">
+
+        <button class="btn-detalle" onclick="verDetalle('${p.id}')">
+          Ver detalle
+        </button>
+
+        ${getBoton(p)}
+
+      </div>
+
+      <div id="detalle-${p.id}" class="detalle"></div>
+
     `;
 
     container.appendChild(div);
@@ -96,6 +134,18 @@ window.verDetalle = async function(id) {
 
   console.log("ID CLICK:", id);
 
+  // detalles
+
+  container.style.display = "block";
+
+  container.innerHTML = `
+    <div class="detalle-loading">
+      Cargando detalle...
+    </div>
+  `;
+
+  // --------
+
   const items = await obtenerItems(id);
 
   container.innerHTML = items.map(i => `
@@ -103,11 +153,12 @@ window.verDetalle = async function(id) {
   `).join("<br>");
 
   container.style.display = "block";
+  container.style.animation = "fadeDetalle .25s ease";
 }
 
 window.cambiarEstado = async function(id, nuevoEstado) {
 
-  const { error } = await supabaseAdmin
+  const { error } = await window.supabaseAdmin
     .from("pedidos")
     .update({ estado: nuevoEstado })
     .eq("id", id);
@@ -119,7 +170,7 @@ window.cambiarEstado = async function(id, nuevoEstado) {
 }
 
 async function obtenerItems(pedidoId) {
-  const { data, error } = await supabaseAdmin
+  const { data, error } = await window.supabaseAdmin
     .from("pedido_items")
     .select("*")
     .eq("pedido_id", pedidoId);
@@ -135,7 +186,7 @@ async function obtenerItems(pedidoId) {
 function suscribirsePedidosAdmin() {
   console.log("🚀 Suscribiendo pedidos...");
 
-  const channel = supabaseAdmin
+  const channel = window.supabaseAdmin
     .channel("admin-pedidos")
     .on(
       "postgres_changes",
@@ -146,6 +197,18 @@ function suscribirsePedidosAdmin() {
       },
       (payload) => {
         console.log("🔥 CAMBIO PEDIDO:", payload);
+
+        if(payload.eventType === "INSERT"){
+
+          if(sonidoHabilitado){
+
+            sonidoPedido.currentTime = 0;
+
+            sonidoPedido.play();
+
+          }
+
+        }
         cargarPedidos();
       }
     )

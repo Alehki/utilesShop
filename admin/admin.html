@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin - Productos</title>
+
+  <link rel="stylesheet" href="./style/admin.css">
+</head>
+<body>
+
+<div class="admin-layout">
+
+  <aside class="sidebar">
+
+    <h2>Admin</h2>
+        <button onclick="mostrarVista('vista-productos')">
+          Productos
+        </button>
+
+        <button onclick="mostrarVista('vista-pedidos')">
+          Pedidos
+        </button>
+
+        <button onclick="mostrarVista('vista-agregar')">
+          Agregar producto
+        </button>
+  </aside>
+
+  <main class="contenido">
+
+    <!-- PRODUCTOS -->
+    <section id="vista-productos" class="vista">
+
+      <h1>Productos</h1>
+
+      <div id="lista-productos"></div>
+
+    </section>
+
+    <!-- AGREGAR PRODUCTO -->
+    <section id="vista-agregar" class="vista oculto">
+
+      <h1>Agregar producto</h1>
+
+    <div class="nuevo-producto">
+
+      <div class="form-group">
+        <label>Nombre</label>
+        <input type="text" id="nuevo-nombre">
+      </div>
+
+      <div class="form-row">
+
+        <div class="form-group">
+          <label>Precio</label>
+          <input type="number" id="nuevo-precio">
+        </div>
+
+        <div class="form-group">
+          <label>Stock</label>
+          <input type="number" id="nuevo-stock">
+        </div>
+
+      </div>
+
+      <div class="form-group">
+        <label>Categoría</label>
+        <input type="text" id="nuevo-categoria">
+      </div>
+
+      <div class="form-group">
+        <label>Imagen principal (img)</label>
+        <input type="text" id="nuevo-img">
+      </div>
+
+      <div class="form-group">
+        <label>Imágenes (separadas por coma)</label>
+        <input type="text" id="nuevo-imagenes">
+      </div>
+
+      <div class="form-group">
+        <label>Colores (separados por coma)</label>
+        <input type="text" id="nuevo-colores">
+      </div>
+
+      <div class="form-group">
+        <label>Tags (separados por coma)</label>
+        <input type="text" id="nuevo-tags">
+      </div>
+
+      <div class="form-row">
+
+        <div class="checkbox-group">
+          <label>Destacado</label>
+          <input type="checkbox" id="nuevo-destacado">
+        </div>
+
+        <div class="checkbox-group">
+          <label>Activo</label>
+          <input type="checkbox" id="nuevo-activo" checked>
+        </div>
+
+      </div>
+
+      <button class="btn-crear" onclick="crearProducto()">
+        Agregar producto
+      </button>
+
+    </div>
+
+    </section>
+
+    <!-- PEDIDOS -->
+    <section id="vista-pedidos" class="vista oculto">
+
+      <h1>Panel de Pedidos</h1>
+
+      <div id="lista-pedidos"></div>
+
+    </section>
+
+  </main>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+<script src="./js/supabase.js"></script>
+
+<script src="./js/productos-admin.js"></script>
+<script src="./js/pedidos-admin.js"></script>
+
+</body>
+</html>

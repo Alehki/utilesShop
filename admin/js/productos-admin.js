@@ -1,10 +1,11 @@
 console.log("ADMIN PRODUCTOS");
 
-const supabaseAdmin = window.supabase.createClient(
-  "https://jtumqhpuegqzmkgeofxw.supabase.co",
-  "sb_publishable_7a6K3_VDHdqvyQhnj-0Cag_uyH7MlFw"
+// const supabaseAdmin = window.supabase.createClient(
+
+//   "https://jtumqhpuegqzmkgeofxw.supabase.co",
+//   "sb_publishable_7a6K3_VDHdqvyQhnj-0Cag_uyH7MlFw"
   
-);
+// );
 
 // async function cargarProductos() {
 //   const { data, error } = await supabaseAdmin
@@ -46,22 +47,39 @@ function renderProductos(productos) {
 
   productos.forEach(p => {
     const div = document.createElement("div");
-    div.classList.add("pedido");
+    div.classList.add("producto");
     div.id = `producto-${p.id}`;
 
     div.innerHTML = `
-      <div><strong>${p.nombre}</strong></div>
+      <div class="producto-info">
 
-      Precio: 
-      <input type="number" value="${p.precio}" id="precio-${p.id}"><br>
+        <div class="producto-datos">
+          <div class="producto-nombre">${p.nombre}</div>
 
-      Stock:
-      <input type="number" value="${p.stock ?? 0}" id="stock-${p.id}"><br>
+          <div class="campo">
+            <label>Precio</label>
+            <input type="number" value="${p.precio}" id="precio-${p.id}">
+          </div>
 
-      Activo:
-      <input type="checkbox" ${p.activo ? "checked" : ""} id="activo-${p.id}"><br>
+          <div class="campo">
+            <label>Stock</label>
+            <input type="number" value="${p.stock ?? 0}" id="stock-${p.id}">
+          </div>
 
-      <button onclick="guardarProducto('${p.id}')">Guardar</button>
+          <div class="campo-checkbox">
+            <label>Activo</label>
+            <input type="checkbox" ${p.activo ? "checked" : ""} id="activo-${p.id}">
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="producto-acciones">
+        <button onclick="guardarProducto('${p.id}')">
+          Guardar
+        </button>
+      </div>
     `;
 
     container.appendChild(div);
@@ -90,7 +108,7 @@ window.guardarProducto = async function(id) {
 
 };
 
-let timeout = null;
+let timeoutProductos = null;
 
 function suscribirseProductos() {
   console.log("🚀 Iniciando suscripción realtime...");
@@ -162,6 +180,84 @@ function actualizarProductoEnUI(producto) {
 
   console.log("✅ UI ACTUALIZADA:", producto.id);
 }
+
+// Agregar producto js
+window.crearProducto = async function() {
+
+  const nombre = document.getElementById("nuevo-nombre").value;
+
+  const precio = Number(
+    document.getElementById("nuevo-precio").value
+  );
+
+  const stock = Number(
+    document.getElementById("nuevo-stock").value
+  );
+
+  const categoria = document.getElementById("nuevo-categoria").value;
+
+  const img = document.getElementById("nuevo-img").value;
+
+  const imagenes = document
+    .getElementById("nuevo-imagenes")
+    .value
+    .split(",")
+    .map(i => i.trim());
+
+  const colores = document
+    .getElementById("nuevo-colores")
+    .value
+    .split(",")
+    .map(c => c.trim());
+
+  const tags = document
+    .getElementById("nuevo-tags")
+    .value
+    .split(",")
+    .map(t => t.trim());
+
+  const destacado = document.getElementById("nuevo-destacado").checked;
+
+  const activo = document.getElementById("nuevo-activo").checked;
+
+  const { error } = await window.supabaseAdmin
+    .from("productos")
+    .insert([
+      {
+        nombre,
+        precio,
+        stock,
+        categoria,
+        img,
+        imagenes,
+        colores,
+        tags,
+        destacado,
+        activo
+      }
+    ]);
+
+  if(error){
+    console.error("ERROR COMPLETO:", error);
+    alert(error.message);
+    return;
+  }
+
+  alert("Producto creado");
+
+}
+
+window.mostrarVista = function(id){
+
+  document.querySelectorAll(".vista").forEach(vista => {
+    vista.classList.add("oculto");
+  });
+
+  document.getElementById(id).classList.remove("oculto");
+
+}
+
+// 
 
 cargarProductos();
 suscribirseProductos();
