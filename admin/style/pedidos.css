@@ -168,3 +168,26 @@
 
   padding:10px 0;
 }
+
+/* para probar nuevos campos */
+
+.pedido-pago,
+.pedido-direccion,
+.pedido-referencia{
+  margin-top:6px;
+
+  font-size:14px;
+
+  color:#4b5563;
+}
+
+.pedido-direccion{
+  color:#111827;
+  font-weight:500;
+}
+
+.pedido-referencia{
+  color:#6b7280;
+  font-style:italic;
+}
+

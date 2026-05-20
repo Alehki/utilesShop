@@ -1,0 +1,91 @@
+#lista-productos{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+
+.producto{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+
+  background:white;
+  padding:18px;
+
+  border-radius:14px;
+
+  box-shadow:0 2px 10px rgba(0,0,0,.08);
+}
+
+.producto-info{
+  flex:1;
+}
+
+.producto-datos{
+  display:flex;
+  align-items:center;
+  gap:24px;
+  flex-wrap:wrap;
+}
+
+.producto-nombre{
+  min-width:180px;
+
+  font-size:16px;
+  font-weight:700;
+
+  color:#111827;
+}
+
+.campo,
+.campo-checkbox{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.campo label,
+.campo-checkbox label{
+  font-size:12px;
+  font-weight:600;
+  color:#6b7280;
+}
+
+.campo input{
+  width:100px;
+
+  padding:8px 10px;
+
+  border:1px solid #d1d5db;
+  border-radius:8px;
+
+  font-size:14px;
+}
+
+.campo-checkbox input{
+  width:18px;
+  height:18px;
+}
+
+.producto-acciones button{
+  background:#22c55e;
+  color:white;
+
+  border:none;
+
+  padding:10px 16px;
+
+  border-radius:10px;
+
+  font-weight:600;
+
+  cursor:pointer;
+
+  transition:.2s;
+}
+
+.producto-acciones button:hover{
+  transform:translateY(-1px);
+  opacity:.95;
+}
