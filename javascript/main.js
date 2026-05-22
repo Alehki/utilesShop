@@ -17,6 +17,11 @@ import { refrescarPedidosActivos } from "./ui-pedidos-badge.js";
 
 document.addEventListener("DOMContentLoaded", () => {
 
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("sw.js")
+      .then(() => console.log("PWA lista"));
+  }
+
   let TODOS_LOS_PRODUCTOS = [];
   let listas = {};
 
