@@ -18,8 +18,10 @@ import { refrescarPedidosActivos } from "./ui-pedidos-badge.js";
 document.addEventListener("DOMContentLoaded", () => {
 
   if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("sw.js")
-      .then(() => console.log("PWA lista"));
+    navigator.serviceWorker
+      .register("./sw.js")
+      .then(() => console.log("PWA lista"))
+      .catch(error => console.error(error));
   }
 
   let TODOS_LOS_PRODUCTOS = [];
