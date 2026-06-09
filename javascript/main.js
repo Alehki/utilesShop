@@ -14,6 +14,7 @@ import { obtenerItemsPedido } from "./supabase/pedidos.js";
 import { suscribirseAPedidos } from "./supabase/pedidos.js";
 import { supabase } from "./supabase/supabase-client.js";
 import { refrescarPedidosActivos } from "./ui-pedidos-badge.js";
+import { crearNavegador, actualizarNavActiva } from "./navigation/navigation.js";
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -23,6 +24,26 @@ document.addEventListener("DOMContentLoaded", () => {
       .then(() => console.log("PWA lista"))
       .catch(error => console.error(error));
   }
+
+  let tabActiva = "inicio"; // inicio | pedidos | perfil
+  let vistaActual = "categorias"; // categorias | productos
+  let categoriaActiva = null;
+
+  const navegador = crearNavegador({
+    getState: () => ({
+      tabActiva,
+      vistaActual,
+      categoriaActiva
+    }),
+
+    setState: (state) => {
+      tabActiva = state.tabActiva;
+      vistaActual = state.vistaActual;
+      categoriaActiva = state.categoriaActiva;
+    },
+
+    render: renderApp
+  });
 
   let TODOS_LOS_PRODUCTOS = [];
   let listas = {};
@@ -76,7 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function mostrarPedidos() {
 
-    vistaActual = "pedidos";
+    // vistaActual = "pedidos";
 
     main.innerHTML = `
       <div>
@@ -198,11 +219,6 @@ document.addEventListener("DOMContentLoaded", () => {
     renderCarrito(contextoCarrito);
   };
 
-  let tabActiva = "inicio"; // inicio | pedidos | perfil
-  let vistaActual = "categorias"; // categorias | productos
-  let categoriaActiva = null;
-
-
   window.onerror = function (msg, url, line, col, error) {
     alert("Error: " + msg + " en línea: " + line);
   };
@@ -255,9 +271,7 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
 
       card.addEventListener("click", () => {
-        vistaActual = "productos";
-        categoriaActiva = cat.id;
-        renderTodo();
+        navegador.abrirCategoria(cat.id);
       });
 
       grid.appendChild(card);
@@ -278,9 +292,7 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
 
     document.querySelector(".btn-volver").addEventListener("click", () => {
-      vistaActual = "categorias";
-      categoriaActiva = null;
-      renderTodo();
+      navegador.volverCategorias();
     });
 
     const contenedor = document.getElementById("contenedorProductos");
@@ -450,6 +462,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // De la nueva implementacion del botton nav
 
   function renderApp() {
+
+    actualizarNavActiva(tabActiva);
 
     // ocultar todo primero
     main.innerHTML = "";
@@ -756,56 +770,22 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 
-
-  // function actualizarCardProducto(id) {
-  //   const card = document.getElementById(`producto-${id}`);
-  //   if (!card) return;
-
-  //   const p = TODOS_LOS_PRODUCTOS.find(prod => prod.id === id);
-  //   if (!p) return;
-  //   const cant = Object.values(carrito)
-  //     .filter(item => item.id === id)
-  //     .reduce((acc, item) => acc + item.cantidad, 0);
-
-  //   const controles = `
-  //     ${
-  //       cant === 0
-  //         ? `<button onclick="event.stopPropagation(); agregarDesdeCard(${id})">Agregar</button>`
-  //         : `
-  //           <button onclick="event.stopPropagation(); restar(${id})">−</button>
-  //           <span>${cant}</span>
-  //           <button onclick="event.stopPropagation(); agregarDesdeCard(${id})">+</button>
-  //         `
-  //     }
-  //   `;
-
-  //   const controlesDiv = card.querySelector(".controles");
-  //   controlesDiv.innerHTML = controles;
-  // }
-
-  // nuevo botton nav
-
   const navItems = document.querySelectorAll(".nav-item");
 
   navItems.forEach(btn => {
     btn.addEventListener("click", () => {
 
-      navItems.forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-
       const tab = btn.dataset.tab;
 
-      if (tabActiva === tab) return; // evita renders innecesarios
+      // evitar render innecesario
+      if (tabActiva === tab) return;
 
-      tabActiva = tab;
+      // actualizar visual nav
+      // navItems.forEach(b => b.classList.remove("active"));
+      // btn.classList.add("active");
 
-      // reset interno cuando volvés a inicio
-      if (tab === "inicio") {
-        vistaActual = "categorias";
-        categoriaActiva = null;
-      }
-
-      renderApp(); // 🔥 nuevo render global
+      // delegar navegación
+      navegador.irA(tab);
     });
   });
 
@@ -1539,7 +1519,8 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const resultado = await crearPedido(carrito, {
         direccion,
-        metodoPago
+        metodoPago,
+        referencia
       });
 
       if (resultado?.error === "stock_insuficiente") {
@@ -1870,6 +1851,11 @@ document.addEventListener("DOMContentLoaded", () => {
     renderApp();
     actualizarCount();
     actualizarEstadoHorario();
+    history.replaceState({
+      tabActiva,
+      vistaActual,
+      categoriaActiva
+    }, "");
   })();
 
   setInterval(actualizarEstadoHorario, 60 * 1000);

@@ -7,12 +7,14 @@ export async function crearPedido(carrito, datosCliente) {
   const items = Object.values(carrito);
 
   console.log("CARRITO PARA BACK:", items);
+  console.log("DATOS CLIENTE:", datosCliente);
 
   const { data, error } = await supabase.rpc("crear_pedido", {
     carrito: items,
     p_cliente_id: clienteId,
     p_direccion: datosCliente.direccion,
-    p_metodo_pago: datosCliente.metodoPago
+    p_metodo_pago: datosCliente.metodoPago,
+    p_referencia: datosCliente.referencia
   });
 
   if (error) throw error;
